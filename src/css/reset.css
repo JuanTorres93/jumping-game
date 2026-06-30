@@ -1,0 +1,38 @@
+/* TODO IMPORTANT: Replace font. This file is just copy-pasted from the calculator project */
+@font-face {
+  font-family: 'Space Grotesk';
+  src: url('./fonts/Space_Grotesk/SpaceGrotesk-VariableFont_wght.ttf')
+    format('truetype');
+}
+
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+
+  box-sizing: inherit;
+}
+
+html {
+  /* 1rem = 10px */
+  font-size: 62.5%;
+
+  /* TODO uncomment and change width when implementing responsive */
+  /* 
+  @media (max-width: 603px) {
+    font-size: 56.25%;
+  }
+  */
+}
+
+body {
+  font-family: 'Space Grotesk', sans-serif;
+
+  box-sizing: border-box;
+
+  font-size: var(--size-normal);
+  color: var(--color-text);
+
+  background-color: var(--color-background);
+}
