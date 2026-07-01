@@ -23,7 +23,7 @@ export function gravityPositionIncrementInPx(
   );
 }
 
-function uniformlyAcceleratedRectilinearMotionPositionIncrementInPx(
+export function uniformlyAcceleratedRectilinearMotionPositionIncrementInPx(
   timeBetweenFramesInSeconds,
   initialVelocityInMetersPerSecond,
   accelerationInMetersPerSecondSquared,

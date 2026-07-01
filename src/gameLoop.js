@@ -12,7 +12,14 @@ export function gameLoop(currentTimeInMs) {
 
   playerData.applyGravity(timeBetweenFramesInSeconds);
 
+  playerData.jump(timeBetweenFramesInSeconds);
+
   playerUI.style.bottom = `${playerData.verticalPositionInPixels}px`;
+
+  // Stop condition, change as needed during development
+  //if (playerData.verticalPositionInPixels <= 0) {
+  //  return;
+  //}
 
   requestAnimationFrame(gameLoop);
 }
