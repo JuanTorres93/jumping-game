@@ -13,7 +13,6 @@ export function gameLoop(currentTimeInMs) {
   playerData.setTimeBetweenFramesInSeconds(timeBetweenFramesInSeconds);
 
   processPlayerInput();
-
   playerData.applyGravity();
 
   playerUI.style.bottom = `${playerData.verticalPositionInPixels}px`;
@@ -29,5 +28,9 @@ export function gameLoop(currentTimeInMs) {
 export function processPlayerInput() {
   if (playerInput.jump.isPressed) {
     playerData.jump();
+  }
+
+  if (!playerInput.jump.isPressed && !playerData.canJump()) {
+    playerData.jumpBlocked = true;
   }
 }

@@ -7,53 +7,68 @@ import {
 export const playerUI = document.getElementById('player');
 
 export const playerData = {
-  fallinSpeedInMetersPerSecond: 0,
-  verticalPositionInPixels: 1000,
+  INITIAL_FALLING_SPEED_M_S: 0,
+
+  verticalPositionInPixels: 0,
 
   JUMP_ACCELERATION_M_S2: 18,
   MAX_JUMP_HEIGHT_IN_PIXELS: 500,
   distanceDuringJumpInPixels: 0,
+  jumpBlocked: false,
+  jumpState: 'grounded', // "grounded", "jumping", "falling
 
   timeBetweenFramesInSeconds: 0.016,
 
   applyGravity() {
     if (this.verticalPositionInPixels <= 0) {
-      if (!this.canJump()) {
-        this.distanceDuringJumpInPixels = 0;
-      }
+      this.verticalPositionInPixels = 0;
+
+      this.distanceDuringJumpInPixels = 0;
+      this.jumpState = 'grounded';
+
+      this.jumpBlocked = false;
 
       return;
     }
 
-    this.verticalPositionInPixels -= gravityPositionIncrementInPx(
+    const positionIncrement = gravityPositionIncrementInPx(
       this.timeBetweenFramesInSeconds,
-      this.fallinSpeedInMetersPerSecond,
+      this.INITIAL_FALLING_SPEED_M_S,
     );
+
+    this.verticalPositionInPixels -= positionIncrement;
   },
 
   jump() {
-    // TODO DELETE THESE DEBUG LOGS
-    console.log('JUMP!');
+    if (this.jumpBlocked || (!this.canJump() && !this.isJumping())) return;
 
-    if (!this.canJump()) return;
+    this.jumpState = 'jumping';
 
     const distanceIncrementInPixels =
       uniformlyAcceleratedRectilinearMotionPositionIncrementInPx(
         this.timeBetweenFramesInSeconds,
-        this.fallinSpeedInMetersPerSecond,
+        this.INITIAL_FALLING_SPEED_M_S,
         convertMetersToPixels(this.JUMP_ACCELERATION_M_S2),
       );
 
-    // TODO DELETE THESE DEBUG LOGS
-    console.log('distance');
-    console.log(distanceIncrementInPixels);
-
     this.verticalPositionInPixels += distanceIncrementInPixels;
     this.distanceDuringJumpInPixels += distanceIncrementInPixels;
+
+    if (this.hasReachedMaxJumpHeight()) {
+      this.jumpState = 'falling';
+    }
   },
 
   canJump() {
-    return this.distanceDuringJumpInPixels < this.MAX_JUMP_HEIGHT_IN_PIXELS;
+    return this.jumpState === 'grounded';
+  },
+
+  isJumping() {
+    return this.jumpState === 'jumping';
+  },
+
+  hasReachedMaxJumpHeight() {
+    return this.distanceDuringJumpInPixels >= this.MAX_JUMP_HEIGHT_IN_PIXELS;
   },
 
   setTimeBetweenFramesInSeconds(timeBetweenFramesInSeconds) {
