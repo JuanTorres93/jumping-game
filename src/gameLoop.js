@@ -2,7 +2,7 @@ import {
   positionIncrementInPx,
   gravityPositionIncrementInPx,
 } from './physics.js';
-import { playerUI, playerData } from './player.js';
+import { playerUI, playerData, playerInput } from './player.js';
 
 let lastTime = 0;
 
@@ -10,9 +10,11 @@ export function gameLoop(currentTimeInMs) {
   const timeBetweenFramesInSeconds = (currentTimeInMs - lastTime) / 1000;
   lastTime = currentTimeInMs;
 
-  playerData.applyGravity(timeBetweenFramesInSeconds);
+  playerData.setTimeBetweenFramesInSeconds(timeBetweenFramesInSeconds);
 
-  playerData.jump(timeBetweenFramesInSeconds);
+  processPlayerInput();
+
+  playerData.applyGravity();
 
   playerUI.style.bottom = `${playerData.verticalPositionInPixels}px`;
 
@@ -22,4 +24,10 @@ export function gameLoop(currentTimeInMs) {
   //}
 
   requestAnimationFrame(gameLoop);
+}
+
+export function processPlayerInput() {
+  if (playerInput.jump.isPressed) {
+    playerData.jump();
+  }
 }
