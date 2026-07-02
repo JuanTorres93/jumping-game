@@ -1,5 +1,5 @@
 import { resetGame, startBtn } from './engine.js';
-import { playerInput } from './player.js';
+import { playerInput, playerUI, playerData } from './player.js';
 
 document.addEventListener('keydown', (event) => {
   if (event.key === playerInput.jump.key) {
@@ -16,5 +16,7 @@ document.addEventListener('keyup', (event) => {
     playerInput.jump.isPressed = false;
   }
 });
+
+playerUI.style.height = `${playerData.heightInPixels}px`;
 
 startBtn.addEventListener('click', resetGame);

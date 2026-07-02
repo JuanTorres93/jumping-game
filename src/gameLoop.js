@@ -14,6 +14,7 @@ export function gameLoop(currentTime) {
   playerData.updatePosition();
 
   playerUI.style.bottom = `${playerData.verticalPositionInPixels}px`;
+  playerUI.style.height = `${playerData.heightInPixels}px`;
 
   state.animationId = requestAnimationFrame(gameLoop);
 }

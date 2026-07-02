@@ -8,9 +8,11 @@ import {
 
 export const playerUI = document.getElementById('player');
 
-export const GROUND_Y = 76;
+const PLAYER_HEIGHT = 92;
 
 export const playerData = {
+  heightInPixels: PLAYER_HEIGHT,
+
   verticalSpeed: 0,
 
   verticalPositionInPixels: 0,
@@ -130,6 +132,7 @@ export const playerData = {
     this.distanceDuringJumpInPixels = 0;
     this.jumpState = 'grounded';
     this.jumpBlocked = false;
+    this.heightInPixels = PLAYER_HEIGHT;
   },
 };
 
