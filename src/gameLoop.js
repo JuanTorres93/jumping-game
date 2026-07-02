@@ -1,25 +1,21 @@
+import { state } from './engine.js';
 import { playerUI, playerData, playerInput } from './player.js';
 
-let lastTime = 0;
+export function gameLoop(currentTime) {
+  if (!state.gameRunning) return;
 
-export function gameLoop(currentTimeInMs) {
-  const timeBetweenFramesInSeconds = (currentTimeInMs - lastTime) / 1000;
-  lastTime = currentTimeInMs;
+  if (!state.lastTime) state.lastTime = currentTime;
+  const deltaTime = currentTime - state.lastTime;
+  state.lastTime = currentTime;
 
-  playerData.setTimeBetweenFramesInSeconds(timeBetweenFramesInSeconds);
-
+  playerData.setTimeBetweenFramesInSeconds(deltaTime / 1000);
   processPlayerInput();
   playerData.applyGravity();
   playerData.updatePosition();
 
   playerUI.style.bottom = `${playerData.verticalPositionInPixels}px`;
 
-  // Stop condition, change as needed during development
-  //if (playerData.verticalPositionInPixels <= 0) {
-  //  return;
-  //}
-
-  requestAnimationFrame(gameLoop);
+  state.animationId = requestAnimationFrame(gameLoop);
 }
 
 export function processPlayerInput() {
