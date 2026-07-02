@@ -8,6 +8,8 @@ import {
 
 export const playerUI = document.getElementById('player');
 
+export const GROUND_Y = 76;
+
 export const playerData = {
   verticalSpeed: 0,
 

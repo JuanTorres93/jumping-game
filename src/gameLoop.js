@@ -1,33 +1,29 @@
-import { playerUI, playerData, playerInput } from './player.js';
+import { state, MAX_LIVES } from './engine.js';
+import { updatePlayerPhysics } from './player.js';
+import { moveObstacles, moveHearts, createObstacle, createHeart } from './obstacles.js';
+import { checkHeartPickup, checkCollision } from './collision-ui.js';
 
-let lastTime = 0;
+export function gameLoop(currentTime) {
+  if (!state.gameRunning) return;
 
-export function gameLoop(currentTimeInMs) {
-  const timeBetweenFramesInSeconds = (currentTimeInMs - lastTime) / 1000;
-  lastTime = currentTimeInMs;
+  if (!state.lastTime) state.lastTime = currentTime;
+  const deltaTime = currentTime - state.lastTime;
+  state.lastTime = currentTime;
 
-  playerData.setTimeBetweenFramesInSeconds(timeBetweenFramesInSeconds);
+  updatePlayerPhysics(state);
+  moveObstacles(state, deltaTime);
+  moveHearts(state, deltaTime);
+  checkHeartPickup(state);
 
-  processPlayerInput();
-  playerData.applyGravity();
-  playerData.updatePosition();
+  if (currentTime >= state.nextObstacleAt) createObstacle(state);
 
-  playerUI.style.bottom = `${playerData.verticalPositionInPixels}px`;
-
-  // Stop condition, change as needed during development
-  //if (playerData.verticalPositionInPixels <= 0) {
-  //  return;
-  //}
-
-  requestAnimationFrame(gameLoop);
-}
-
-export function processPlayerInput() {
-  if (playerInput.jump.isPressed) {
-    playerData.jump();
+  if (currentTime >= state.nextHeartAt) {
+    if (state.lives < MAX_LIVES) createHeart(state);
+    else state.nextHeartAt = currentTime + 4000;
   }
 
-  if (!playerInput.jump.isPressed && !playerData.canJump()) {
-    playerData.blockJump();
-  }
+  checkCollision(state, currentTime);
+  if (!state.gameRunning) return;
+
+  state.animationId = requestAnimationFrame(gameLoop);
 }
