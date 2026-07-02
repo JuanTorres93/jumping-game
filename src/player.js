@@ -14,7 +14,7 @@ export const playerData = {
   verticalPositionInPixels: 0,
 
   JUMP_ACCELERATION: 14,
-  MAX_JUMP_HEIGHT: 200,
+  MAX_JUMP_HEIGHT: 300,
   MAX_SPEED: 1200,
   distanceDuringJumpInPixels: 0,
   jumpBlocked: false,
