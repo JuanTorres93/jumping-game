@@ -72,11 +72,7 @@ export function resetGame() {
   state.nextObstacleAt = performance.now() + 900;
   state.nextHeartAt = performance.now() + randomBetween(9000, 14000);
 
-  playerData.verticalSpeed = 0;
-  playerData.verticalPositionInPixels = 0;
-  playerData.distanceDuringJumpInPixels = 0;
-  playerData.jumpBlocked = false;
-  playerData.jumpState = 'grounded';
+  playerData.reset();
 
   scoreElement.textContent = state.score;
   obstaclesContainer.innerHTML = '';

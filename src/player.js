@@ -127,6 +127,14 @@ export const playerData = {
       this.jumpBlocked = false;
     }
   },
+
+  reset() {
+    this.verticalSpeed = 0;
+    this.verticalPositionInPixels = 0;
+    this.distanceDuringJumpInPixels = 0;
+    this.jumpBlocked = false;
+    this.jumpState = 'grounded';
+  },
 };
 
 export const playerInput = {
