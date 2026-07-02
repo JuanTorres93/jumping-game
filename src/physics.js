@@ -1,42 +1,45 @@
-const PIXELS_PER_METER = 100;
+export const GRAVITY = 1;
 
-const GRAVITY_M_S2 = 7;
-
-export function positionIncrementInPx(
+export function velocityIncrementInPxPerSecond(
   timeBetweenFramesInSeconds,
-  velocityInMetersPerSecond,
+  initialVelocityPxSecond,
+  accelerationPxSecondSquared,
 ) {
-  const distanceInMeters =
-    velocityInMetersPerSecond * timeBetweenFramesInSeconds;
+  return (
+    initialVelocityPxSecond +
+    accelerationPxSecondSquared * timeBetweenFramesInSeconds
+  );
+}
 
-  return convertMetersToPixels(distanceInMeters);
+export function gravityVelocityIncrementInPxPerSecond(
+  timeBetweenFramesInSeconds,
+  initialVelocityPxSecond,
+) {
+  return velocityIncrementInPxPerSecond(
+    timeBetweenFramesInSeconds,
+    initialVelocityPxSecond,
+    -GRAVITY,
+  );
 }
 
 export function gravityPositionIncrementInPx(
   timeBetweenFramesInSeconds,
-  initialFallingSpeedInMetersPerSecond = 0,
+  initialVelocityPxSecond,
 ) {
   return uniformlyAcceleratedRectilinearMotionPositionIncrementInPx(
     timeBetweenFramesInSeconds,
-    initialFallingSpeedInMetersPerSecond,
-    convertMetersToPixels(GRAVITY_M_S2),
+    initialVelocityPxSecond,
+    -GRAVITY,
   );
 }
 
 export function uniformlyAcceleratedRectilinearMotionPositionIncrementInPx(
   timeBetweenFramesInSeconds,
-  initialVelocityInMetersPerSecond,
-  accelerationInMetersPerSecondSquared,
+  initialVelocityPxSecond,
+  accelerationPxSecondSquared,
 ) {
-  const distanceInMeters =
-    initialVelocityInMetersPerSecond * timeBetweenFramesInSeconds +
-    0.5 *
-      accelerationInMetersPerSecondSquared *
-      timeBetweenFramesInSeconds ** 2;
-
-  return convertMetersToPixels(distanceInMeters);
-}
-
-export function convertMetersToPixels(meters) {
-  return meters * PIXELS_PER_METER;
+  return (
+    initialVelocityPxSecond * timeBetweenFramesInSeconds +
+    0.5 * accelerationPxSecondSquared * timeBetweenFramesInSeconds ** 2
+  );
 }

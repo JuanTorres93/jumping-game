@@ -1,7 +1,3 @@
-import {
-  positionIncrementInPx,
-  gravityPositionIncrementInPx,
-} from './physics.js';
 import { playerUI, playerData, playerInput } from './player.js';
 
 let lastTime = 0;
@@ -31,6 +27,6 @@ export function processPlayerInput() {
   }
 
   if (!playerInput.jump.isPressed && !playerData.canJump()) {
-    playerData.jumpBlocked = true;
+    playerData.blockJump();
   }
 }
