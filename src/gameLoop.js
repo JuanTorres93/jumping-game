@@ -1,5 +1,11 @@
+import { state } from './engine.js';
 import { playerUI, playerData, playerInput } from './player.js';
-import { createObstacle, moveObstacles, moveHeart, createHeart } from './obstacle.js';
+import {
+  createObstacle,
+  moveObstacles,
+  moveHeart,
+  createHeart,
+} from './obstacle.js';
 
 let lastTime = 0;
 
@@ -7,23 +13,26 @@ let createObstacleTimeout = 0;
 
 let createHeartTimeout = 0;
 
-export function gameLoop(currentTimeInMs) {
-  const timeBetweenFramesInSeconds = (currentTimeInMs - lastTime) / 1000;
-  lastTime = currentTimeInMs;
+export function gameLoop(currentTime) {
+  if (!state.gameRunning) return;
+
+  if (!state.lastTime) state.lastTime = currentTime;
+  const deltaTime = currentTime - state.lastTime;
+  state.lastTime = currentTime;
+
+  const timeBetweenFramesInSeconds = deltaTime / 1000;
 
   playerData.setTimeBetweenFramesInSeconds(timeBetweenFramesInSeconds);
-
   processPlayerInput();
   playerData.applyGravity();
   playerData.updatePosition();
 
-
-  if(createObstacleTimeout <= 0) {
+  if (createObstacleTimeout <= 0) {
     createObstacle();
     createObstacleTimeout = 2000; // 1000 ms = 1 second
   }
-  
-  if(createHeartTimeout <= 0) {
+
+  if (createHeartTimeout <= 0) {
     createHeart();
     createHeartTimeout = 10000;
   }
@@ -41,7 +50,7 @@ export function gameLoop(currentTimeInMs) {
   createObstacleTimeout -= timeBetweenFramesInSeconds * 1000;
   createHeartTimeout -= timeBetweenFramesInSeconds * 1000;
 
-  requestAnimationFrame(gameLoop);
+  state.animationId = requestAnimationFrame(gameLoop);
 }
 
 export function processPlayerInput() {

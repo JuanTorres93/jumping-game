@@ -8,6 +8,8 @@ import {
 
 export const playerUI = document.getElementById('player');
 
+export const GROUND_Y = 76;
+
 export const playerData = {
   verticalSpeed: 0,
 
@@ -118,12 +120,16 @@ export const playerData = {
     this.verticalPositionInPixels += positionIncrement;
 
     if (this.verticalPositionInPixels <= 0) {
-      this.verticalPositionInPixels = 0;
-      this.verticalSpeed = 0;
-      this.distanceDuringJumpInPixels = 0;
-      this.jumpState = 'grounded';
-      this.jumpBlocked = false;
+      this.reset();
     }
+  },
+
+  reset() {
+    this.verticalPositionInPixels = 0;
+    this.verticalSpeed = 0;
+    this.distanceDuringJumpInPixels = 0;
+    this.jumpState = 'grounded';
+    this.jumpBlocked = false;
   },
 };
 

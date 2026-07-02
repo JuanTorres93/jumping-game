@@ -9,16 +9,26 @@
   --shadow: rgba(33, 36, 61, 0.18);
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: "Poppins", Arial, sans-serif;
+  font-family: 'Poppins', Arial, sans-serif;
   color: var(--ink);
   background:
-    radial-gradient(circle at top left, rgba(77, 150, 255, 0.25), transparent 30%),
-    radial-gradient(circle at bottom right, rgba(232, 93, 117, 0.2), transparent 30%),
+    radial-gradient(
+      circle at top left,
+      rgba(77, 150, 255, 0.25),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(232, 93, 117, 0.2),
+      transparent 30%
+    ),
     var(--bg);
 }
 
@@ -50,13 +60,15 @@ body {
 
 h1 {
   margin: 0 0 6px;
-  font-family: "Press Start 2P", monospace;
+  font-family: 'Press Start 2P', monospace;
   font-size: clamp(1.2rem, 3vw, 2rem);
   color: var(--school-red);
   text-shadow: 3px 3px 0 var(--school-yellow);
 }
 
-p { margin: 0; }
+p {
+  margin: 0;
+}
 
 .score-panel {
   min-width: 210px;
@@ -66,7 +78,7 @@ p { margin: 0; }
   border: 3px solid var(--ink);
   border-radius: 16px;
   background: #fffdf7;
-  font-family: "Press Start 2P", monospace;
+  font-family: 'Press Start 2P', monospace;
   font-size: 0.72rem;
 }
 
@@ -80,7 +92,9 @@ p { margin: 0; }
 .heart {
   color: #ff3b5c;
   text-shadow: 1px 1px 0 var(--ink);
-  transition: color 0.15s ease, transform 0.15s ease;
+  transition:
+    color 0.15s ease,
+    transform 0.15s ease;
 }
 
 .heart.lost {
@@ -112,7 +126,7 @@ p { margin: 0; }
 .background-back {
   height: 230px;
   opacity: 0.95;
-  background-image: url("../../assets/backgrounds/school-hallway.png");
+  background-image: url('../../assets/backgrounds/school-hallway.png');
   background-size: 690px 230px;
   animation: scrollBackground 14s linear infinite;
 }
@@ -124,7 +138,11 @@ p { margin: 0; }
   bottom: 0;
   height: 76px;
   background:
-    repeating-linear-gradient(90deg, transparent 0 58px, var(--floor-line) 58px 62px),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 58px,
+      var(--floor-line) 58px 62px
+    ),
     linear-gradient(var(--floor), #5d3f2f);
   border-top: 5px solid var(--ink);
   z-index: 3;
@@ -133,11 +151,13 @@ p { margin: 0; }
 .player {
   position: absolute;
   left: 92px;
-  bottom: 76px;
+  bottom: 0px;
   width: 70px;
   height: 92px;
   z-index: 6;
-  transition: width 0.08s ease, height 0.08s ease;
+  transition:
+    width 0.08s ease,
+    height 0.08s ease;
 }
 
 .player img {
@@ -150,13 +170,13 @@ p { margin: 0; }
 }
 
 .player::after {
-  content: "";
+  content: '';
   position: absolute;
   left: 10px;
   bottom: -7px;
   width: 55px;
   height: 10px;
-  background: rgba(0,0,0,0.18);
+  background: rgba(0, 0, 0, 0.18);
   border-radius: 50%;
 }
 
@@ -170,7 +190,9 @@ p { margin: 0; }
 }
 
 @keyframes playerBlink {
-  50% { opacity: 0.3; }
+  50% {
+    opacity: 0.3;
+  }
 }
 
 .obstacles {
@@ -194,8 +216,12 @@ p { margin: 0; }
   pointer-events: none;
 }
 
-.obstacle.low { bottom: 76px; }
-.obstacle.high { bottom: 145px; }
+.obstacle.low {
+  bottom: 76px;
+}
+.obstacle.high {
+  bottom: 145px;
+}
 
 .hearts {
   position: absolute;
@@ -213,13 +239,20 @@ p { margin: 0; }
   
   line-height: 1;
   color: #ff3b5c;
-  text-shadow: 0 0 10px rgba(255, 59, 92, 0.85), 1px 1px 0 var(--ink);
+  text-shadow:
+    0 0 10px rgba(255, 59, 92, 0.85),
+    1px 1px 0 var(--ink);
   animation: heartPulse 0.85s ease-in-out infinite;
 }
 
 @keyframes heartPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.18); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.18);
+  }
 }
 
 .message {
@@ -236,11 +269,13 @@ p { margin: 0; }
   backdrop-filter: blur(4px);
 }
 
-.message.hidden { display: none; }
+.message.hidden {
+  display: none;
+}
 
 .message h2 {
   margin: 0;
-  font-family: "Press Start 2P", monospace;
+  font-family: 'Press Start 2P', monospace;
   color: var(--school-red);
 }
 
@@ -280,13 +315,26 @@ kbd {
 }
 
 @keyframes scrollBackground {
-  from { background-position-x: 0; }
-  to { background-position-x: -690px; }
+  from {
+    background-position-x: 0;
+  }
+  to {
+    background-position-x: -690px;
+  }
 }
 
 @media (max-width: 720px) {
-  .game-header { align-items: flex-start; flex-direction: column; }
-  .score-panel { width: 100%; }
-  .game { height: 380px; }
-  .player { left: 54px; }
+  .game-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .score-panel {
+    width: 100%;
+  }
+  .game {
+    height: 380px;
+  }
+  .player {
+    left: 54px;
+  }
 }
