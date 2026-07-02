@@ -8,6 +8,9 @@ import {
 
 export const playerUI = document.getElementById('player');
 
+const playerImmage = playerUI.querySelector('img');
+playerImmage.src = 'assets/player/student_stand.png'; // '../assets/player/sprite.png';
+
 const PLAYER_HEIGHT = 92;
 
 export const playerData = {
