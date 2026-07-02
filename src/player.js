@@ -51,6 +51,16 @@ export const playerData = {
     this.updateVelocityByStep(velocityIncrement);
   },
 
+  duck() {
+    if (this.jumpState !== 'grounded') return;
+
+    this.heightInPixels = PLAYER_HEIGHT / 2;
+  },
+
+  standUp() {
+    this.heightInPixels = PLAYER_HEIGHT;
+  },
+
   canJump() {
     return this.jumpState === 'grounded';
   },
@@ -139,6 +149,11 @@ export const playerData = {
 export const playerInput = {
   jump: {
     key: ' ',
+    isPressed: false,
+  },
+
+  duck: {
+    key: 'ArrowDown',
     isPressed: false,
   },
 };

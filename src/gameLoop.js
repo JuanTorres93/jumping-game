@@ -27,4 +27,10 @@ export function processPlayerInput() {
   if (!playerInput.jump.isPressed && !playerData.canJump()) {
     playerData.blockJump();
   }
+
+  if (playerInput.duck.isPressed) {
+    playerData.duck();
+  } else {
+    playerData.standUp();
+  }
 }
