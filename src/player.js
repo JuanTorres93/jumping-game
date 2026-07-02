@@ -8,10 +8,11 @@ import {
 
 export const playerUI = document.getElementById('player');
 
-const playerImmage = playerUI.querySelector('img');
-playerImmage.src = 'assets/player/student_stand.png'; // '../assets/player/sprite.png';
+// TODO: remove img element from HTML, it breaks the floor, so I'm not doing it now due to time constraints.
+const playerImage = playerUI.querySelector('img');
+playerImage.src = '../assets/player/student_stand.png';
 
-const PLAYER_HEIGHT = 92;
+const PLAYER_HEIGHT = 80;
 
 export const playerData = {
   heightInPixels: PLAYER_HEIGHT,
@@ -26,6 +27,8 @@ export const playerData = {
   distanceDuringJumpInPixels: 0,
   jumpBlocked: false,
   jumpState: 'grounded', // "grounded", "jumping", "falling
+
+  isDucking: false,
 
   timeBetweenFramesInSeconds: 0.016,
 
@@ -57,11 +60,17 @@ export const playerData = {
   duck() {
     if (this.jumpState !== 'grounded') return;
 
-    this.heightInPixels = PLAYER_HEIGHT / 2;
+    playerImage.src = '../assets/player/student_duck.png';
+    this.heightInPixels = PLAYER_HEIGHT / 1.2;
+
+    this.isDucking = true;
   },
 
   standUp() {
     this.heightInPixels = PLAYER_HEIGHT;
+    this.isDucking = false;
+
+    playerImage.src = '../assets/player/student_run_right_leg_front.png';
   },
 
   canJump() {
@@ -104,6 +113,8 @@ export const playerData = {
     let positionIncrement = 0;
 
     if (this.jumpState === 'jumping') {
+      playerImage.src = '../assets/player/student_jump.png';
+
       positionIncrement =
         uniformlyAcceleratedRectilinearMotionPositionIncrementInPx(
           this.timeBetweenFramesInSeconds,
@@ -129,6 +140,9 @@ export const playerData = {
         this.verticalSpeed,
       );
     } else {
+      if (!this.isDucking) {
+        playerImage.src = '../assets/player/student_run_right_leg_front.png';
+      }
       return;
     }
 
@@ -146,6 +160,9 @@ export const playerData = {
     this.jumpState = 'grounded';
     this.jumpBlocked = false;
     this.heightInPixels = PLAYER_HEIGHT;
+    this.isDucking = false;
+
+    playerImage.src = '../assets/player/student_stand.png';
   },
 };
 

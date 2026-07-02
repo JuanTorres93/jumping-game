@@ -26,5 +26,6 @@ document.addEventListener('keyup', (event) => {
 });
 
 playerUI.style.height = `${playerData.heightInPixels}px`;
+playerUI.style.width = `${playerData.heightInPixels}px`;
 
 startBtn.addEventListener('click', resetGame);
