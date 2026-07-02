@@ -13,7 +13,7 @@ export const playerData = {
 
   verticalPositionInPixels: 500,
 
-  JUMP_ACCELERATION: 4,
+  JUMP_ACCELERATION: 14,
   MAX_JUMP_HEIGHT: 200,
   MAX_SPEED: 1200,
   distanceDuringJumpInPixels: 0,
@@ -48,6 +48,9 @@ export const playerData = {
   jump() {
     if (this.jumpBlocked || (!this.canJump() && !this.isJumping())) return;
 
+    // TODO DELETE THESE DEBUG LOGS
+    console.log('JUMPING');
+
     this.jumpState = 'jumping';
 
     const velocityIncrement = velocityIncrementInPxPerSecond(
@@ -67,6 +70,10 @@ export const playerData = {
 
   blockJump() {
     this.jumpBlocked = true;
+
+    if (this.verticalSpeed > 0) {
+      this.verticalSpeed = 0;
+    }
   },
 
   isJumping() {
@@ -117,8 +124,10 @@ export const playerData = {
       }
     }
 
-    this.verticalPositionInPixels +=
+    const totalPositionIncrement =
       gravityPositionIncrement + jumpPositionIncrement;
+
+    this.verticalPositionInPixels += totalPositionIncrement;
   },
 };
 

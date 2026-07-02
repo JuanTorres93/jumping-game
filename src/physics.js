@@ -1,4 +1,4 @@
-export const GRAVITY = 1;
+export const GRAVITY = 8;
 
 export function velocityIncrementInPxPerSecond(
   timeBetweenFramesInSeconds,
