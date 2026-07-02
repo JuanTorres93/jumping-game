@@ -1,20 +1,10 @@
 :root {
-  /* TODO IMPORTANT: Replace. This file is just copy-pasted from the calculator project */
-  --color-background: #182235;
-
-  --color-calculator: #0f172a;
-
-  --color-button: #1f2937;
-  --color-button-hover: #334155;
-
-  --color-text: #f8fafc;
-
-  --color-operator: #f59e0b;
-  --color-operator-hover: #fbbf24;
-
-  --color-danger: #ef4444;
-  --color-danger-hover: #f87171;
-
-  --text-size-display: 2.5rem;
-  --text-size-button: 3.75rem;
+  --bg: #f7efe2;
+  --ink: #21243d;
+  --school-red: #e85d75;
+  --school-blue: #4d96ff;
+  --school-yellow: #ffd166;
+  --floor: #7c5c47;
+  --floor-line: #604231;
+  --shadow: rgba(33, 36, 61, 0.18);
 }
