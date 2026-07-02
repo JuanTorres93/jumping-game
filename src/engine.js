@@ -1,5 +1,4 @@
-import { playerSprites, updatePlayerPosition } from './player.js';
-import { updateLivesDisplay, showMessage, hideMessage, updateBestScore } from './collision-ui.js';
+import { playerData } from './player.js';
 import { gameLoop } from './gameLoop.js';
 
 export const game = document.getElementById('game');
@@ -11,14 +10,10 @@ export const lifeIcons = Array.from(document.querySelectorAll('#lives .heart'));
 export const scoreElement = document.getElementById('score');
 export const bestScoreElement = document.getElementById('bestScore');
 export const message = document.getElementById('message');
+export const messageTitle = document.getElementById('messageTitle');
+export const messageBody = document.getElementById('messageBody');
 export const startBtn = document.getElementById('startBtn');
 
-export const GROUND_Y = 76;
-export const GRAVITY = 1.15;
-export const JUMP_FORCE = 15;
-export const DOUBLE_JUMP_FORCE = 20;
-export const FAST_FALL_VELOCITY = -26;
-export const MAX_PLAYER_Y = 230;
 export const MAX_LIVES = 3;
 export const HEART_BOTTOM = 270;
 export const HEART_SIZE = 40;
@@ -27,11 +22,7 @@ export const INVULNERABLE_DURATION = 1100;
 export const state = {
   gameRunning: false,
   gameOver: false,
-  playerY: 0,
-  velocityY: 0,
-  isJumping: false,
   isDucking: false,
-  jumpCount: 0,
   lives: MAX_LIVES,
   invulnerableUntil: 0,
   score: 0,
@@ -50,14 +41,26 @@ export function randomBetween(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+export function showMessage(title, lines, buttonLabel) {
+  messageTitle.textContent = title;
+  messageBody.innerHTML = '';
+  lines.forEach((line) => {
+    const p = document.createElement('p');
+    p.textContent = line;
+    messageBody.appendChild(p);
+  });
+  startBtn.textContent = buttonLabel;
+  message.classList.remove('hidden');
+}
+
+export function hideMessage() {
+  message.classList.add('hidden');
+}
+
 export function resetGame() {
   state.gameRunning = true;
   state.gameOver = false;
-  state.playerY = 0;
-  state.velocityY = 0;
-  state.isJumping = false;
   state.isDucking = false;
-  state.jumpCount = 0;
   state.lives = MAX_LIVES;
   state.invulnerableUntil = 0;
   state.score = 0;
@@ -69,14 +72,17 @@ export function resetGame() {
   state.nextObstacleAt = performance.now() + 900;
   state.nextHeartAt = performance.now() + randomBetween(9000, 14000);
 
+  playerData.verticalSpeed = 0;
+  playerData.verticalPositionInPixels = 0;
+  playerData.distanceDuringJumpInPixels = 0;
+  playerData.jumpBlocked = false;
+  playerData.jumpState = 'grounded';
+
   scoreElement.textContent = state.score;
   obstaclesContainer.innerHTML = '';
   heartsContainer.innerHTML = '';
   player.classList.remove('duck', 'invulnerable');
-  playerImg.src = playerSprites.run;
-
-  updatePlayerPosition(state);
-  updateLivesDisplay(state);
+  player.style.bottom = '0px';
   hideMessage();
 
   if (state.animationId) cancelAnimationFrame(state.animationId);
@@ -87,9 +93,11 @@ export function endGame() {
   state.gameRunning = false;
   state.gameOver = true;
   cancelAnimationFrame(state.animationId);
-  playerImg.src = playerSprites.stand;
 
-  updateBestScore(state);
+  if (state.score > state.bestScore) {
+    state.bestScore = state.score;
+    bestScoreElement.textContent = state.bestScore;
+  }
 
   showMessage(
     'Game Over',
