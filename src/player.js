@@ -120,20 +120,16 @@ export const playerData = {
     this.verticalPositionInPixels += positionIncrement;
 
     if (this.verticalPositionInPixels <= 0) {
-      this.verticalPositionInPixels = 0;
-      this.verticalSpeed = 0;
-      this.distanceDuringJumpInPixels = 0;
-      this.jumpState = 'grounded';
-      this.jumpBlocked = false;
+      this.reset();
     }
   },
 
   reset() {
-    this.verticalSpeed = 0;
     this.verticalPositionInPixels = 0;
+    this.verticalSpeed = 0;
     this.distanceDuringJumpInPixels = 0;
-    this.jumpBlocked = false;
     this.jumpState = 'grounded';
+    this.jumpBlocked = false;
   },
 };
 
