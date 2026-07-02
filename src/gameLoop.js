@@ -10,6 +10,7 @@ export function gameLoop(currentTimeInMs) {
 
   processPlayerInput();
   playerData.applyGravity();
+  playerData.updatePosition();
 
   playerUI.style.bottom = `${playerData.verticalPositionInPixels}px`;
 

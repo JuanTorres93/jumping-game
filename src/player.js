@@ -11,7 +11,7 @@ export const playerUI = document.getElementById('player');
 export const playerData = {
   verticalSpeed: 0,
 
-  verticalPositionInPixels: 500,
+  verticalPositionInPixels: 0,
 
   JUMP_ACCELERATION: 14,
   MAX_JUMP_HEIGHT: 200,
@@ -23,17 +23,7 @@ export const playerData = {
   timeBetweenFramesInSeconds: 0.016,
 
   applyGravity() {
-    if (this.verticalPositionInPixels <= 0) {
-      this.verticalPositionInPixels = 0;
-      this.verticalSpeed = 0;
-
-      this.distanceDuringJumpInPixels = 0;
-      this.jumpState = 'grounded';
-
-      this.jumpBlocked = false;
-
-      return;
-    }
+    if (this.jumpState === 'grounded') return;
 
     const velocityIncrement = gravityVelocityIncrementInPxPerSecond(
       this.timeBetweenFramesInSeconds,
@@ -41,15 +31,10 @@ export const playerData = {
     );
 
     this.updateVelocityByStep(velocityIncrement);
-
-    this.updatePosition();
   },
 
   jump() {
     if (this.jumpBlocked || (!this.canJump() && !this.isJumping())) return;
-
-    // TODO DELETE THESE DEBUG LOGS
-    console.log('JUMPING');
 
     this.jumpState = 'jumping';
 
@@ -60,8 +45,6 @@ export const playerData = {
     );
 
     this.updateVelocityByStep(velocityIncrement);
-
-    this.updatePosition();
   },
 
   canJump() {
@@ -89,45 +72,58 @@ export const playerData = {
   },
 
   updateVelocityByStep(step) {
-    const absoluteSpeed = Math.abs(this.verticalSpeed);
+    const newSpeed = this.verticalSpeed + step;
 
-    const expectedSpeed = absoluteSpeed + step;
-
-    const absoluteExpectedSpeed = Math.abs(expectedSpeed);
-
-    if (absoluteExpectedSpeed > this.MAX_SPEED) return;
-
-    this.verticalSpeed += step;
+    if (newSpeed > this.MAX_SPEED) {
+      this.verticalSpeed = this.MAX_SPEED;
+    } else if (newSpeed < -this.MAX_SPEED) {
+      this.verticalSpeed = -this.MAX_SPEED;
+    } else {
+      this.verticalSpeed = newSpeed;
+    }
   },
 
   updatePosition() {
-    let jumpPositionIncrement = 0;
-
-    const gravityPositionIncrement = gravityPositionIncrementInPx(
-      this.timeBetweenFramesInSeconds,
-      this.verticalSpeed,
-    );
+    let positionIncrement = 0;
 
     if (this.jumpState === 'jumping') {
-      jumpPositionIncrement =
+      positionIncrement =
+        uniformlyAcceleratedRectilinearMotionPositionIncrementInPx(
+          this.timeBetweenFramesInSeconds,
+          this.verticalSpeed,
+          this.JUMP_ACCELERATION - GRAVITY,
+        );
+
+      const jumpOnlyIncrement =
         uniformlyAcceleratedRectilinearMotionPositionIncrementInPx(
           this.timeBetweenFramesInSeconds,
           this.verticalSpeed,
           this.JUMP_ACCELERATION,
         );
-
-      this.distanceDuringJumpInPixels += jumpPositionIncrement;
+      this.distanceDuringJumpInPixels += jumpOnlyIncrement;
 
       if (this.hasReachedMaxJumpHeight()) {
         this.jumpState = 'falling';
         this.verticalSpeed = 0;
       }
+    } else if (this.jumpState === 'falling') {
+      positionIncrement = gravityPositionIncrementInPx(
+        this.timeBetweenFramesInSeconds,
+        this.verticalSpeed,
+      );
+    } else {
+      return;
     }
 
-    const totalPositionIncrement =
-      gravityPositionIncrement + jumpPositionIncrement;
+    this.verticalPositionInPixels += positionIncrement;
 
-    this.verticalPositionInPixels += totalPositionIncrement;
+    if (this.verticalPositionInPixels <= 0) {
+      this.verticalPositionInPixels = 0;
+      this.verticalSpeed = 0;
+      this.distanceDuringJumpInPixels = 0;
+      this.jumpState = 'grounded';
+      this.jumpBlocked = false;
+    }
   },
 };
 
