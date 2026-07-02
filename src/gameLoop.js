@@ -6,12 +6,9 @@ import {
   moveHeart,
   createHeart,
 } from './obstacle.js';
+import { checkCollision, checkHeartPickup } from './collision-ui.js';
 
 let lastTime = 0;
-
-let createObstacleTimeout = 0;
-
-let createHeartTimeout = 0;
 
 export function gameLoop(currentTime) {
   if (!state.gameRunning) return;
@@ -27,18 +24,21 @@ export function gameLoop(currentTime) {
   playerData.applyGravity();
   playerData.updatePosition();
 
-  if (createObstacleTimeout <= 0) {
+  if (state.nextObstacleAt <= 0) {
     createObstacle();
-    createObstacleTimeout = 2000; // 1000 ms = 1 second
+    state.nextObstacleAt = 2000; // 1000 ms = 1 second
   }
 
-  if (createHeartTimeout <= 0) {
+  if (state.nextHeartAt <= 0) {
     createHeart();
-    createHeartTimeout = 10000;
+    state.nextHeartAt = 10000;
   }
 
   moveObstacles(timeBetweenFramesInSeconds);
   moveHeart(timeBetweenFramesInSeconds);
+
+  checkCollision(currentTime);
+  checkHeartPickup();
 
   playerUI.style.bottom = `${playerData.verticalPositionInPixels}px`;
 
@@ -47,8 +47,8 @@ export function gameLoop(currentTime) {
   //  return;
   //}
 
-  createObstacleTimeout -= timeBetweenFramesInSeconds * 1000;
-  createHeartTimeout -= timeBetweenFramesInSeconds * 1000;
+  state.nextObstacleAt -= timeBetweenFramesInSeconds * 1000;
+  state.nextHeartAt -= timeBetweenFramesInSeconds * 1000;
 
   state.animationId = requestAnimationFrame(gameLoop);
 }

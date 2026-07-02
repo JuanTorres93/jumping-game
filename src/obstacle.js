@@ -1,6 +1,8 @@
+import { obstaclesContainer, heartsContainer, state, scoreElement} from "./engine.js";
+
 const BACKPACK = {
     src: "../assets/obstacles/backpack.png",
-    placement: 20,
+    placement: 20
 }
 
 const BASKETBALL = {
@@ -38,7 +40,6 @@ function chooseObstacleType() {
 function createObstacle()
 {
     const obstacleType = chooseObstacleType();
-    const obstaclesContainer = document.querySelector(".obstacles");
     const obstacle = document.createElement("div");
     const obstacleImage = document.createElement("img");
     obstacle.classList.add("obstacle");
@@ -47,18 +48,21 @@ function createObstacle()
     obstacle.appendChild(obstacleImage);
     obstacleImage.setAttribute("src", obstacleType.src);
     obstaclesContainer.appendChild(obstacle);
+    state.obstacles.push(obstacle);
 }
 
 function moveObstacles(timeBetweenFramesInSeconds)
 {
-    for (const obstacle of document.querySelectorAll(".obstacle"))
+    for (const obstacle of state.obstacles)
     {
         const currentLeft = parseInt(obstacle.style.left) || -5;
         const newLeft = currentLeft - (0.01 * timeBetweenFramesInSeconds);
         obstacle.style.left = newLeft + "rem";
         if (obstacle.style.left <= "-5rem")
         {
-            obstacle.remove();
+            state.score++;
+            scoreElement.textContent = state.score;
+            removeGameObject(obstacle, state.obstacles);
         }
     }
     
@@ -66,7 +70,6 @@ function moveObstacles(timeBetweenFramesInSeconds)
 
 function createHeart()
 {
-    const heartsContainer = document.querySelector(".hearts");
     const heart = document.createElement("div");
     const heartImage = document.createElement("img");
     heart.classList.add("life-pickup");
@@ -74,58 +77,40 @@ function createHeart()
     heart.appendChild(heartImage);
     heartImage.setAttribute("src", "../assets/Heart.png");
     heartsContainer.appendChild(heart);
+    state.hearts.push(heart);
 }
 
 function moveHeart(timeBetweenFramesInSeconds)
 {
-    for (const heart of document.querySelectorAll(".life-pickup"))
+    for (const heart of state.hearts)
     {
         const currentLeft = parseInt(heart.style.left) || -5;
         const newLeft = currentLeft - (0.1 * timeBetweenFramesInSeconds);
         heart.style.left = newLeft + "rem";
         if (heart.style.left <= "-5rem")
         {
-            heart.remove();
+            removeGameObject(heart, state.hearts);
         }
     }
 }
 
-function getObstacleHitbox(playerPosition, obstaclePosition)
+function getObstacleHitbox(obstacle)
 {
-    let rightOverlap = (playerPosition.right >= obstaclePosition.left && playerPosition.right <= obstaclePosition.right);
-    let bottomOverlap = (playerPosition.bottom >= obstaclePosition.top);
-    /*setInterval(() => {
-        let playerPosition = document.querySelector(".player").getBoundingClientRect();
-        for (const obstacle of document.querySelectorAll(".obstacle"))
-        {
-            let obstaclePosition = obstacle.getBoundingClientRect();
-            let rightOverlap = (playerPosition.right >= obstaclePosition.left && playerPosition.right <= obstaclePosition.right);
-            let bottomOverlap = (playerPosition.bottom >= obstaclePosition.top);
-            if(rightOverlap && bottomOverlap)
-            {
-                console.log("Obstacle HIT!");
-            }
-        
-        }}, 10)*/
+    return obstacle.getBoundingClientRect();
 }
 
-function getHeartHitbox(playerPosition, heartPosition)
+function getHeartHitbox(heart)
 {
-    let rightOverlap = (playerPosition.right >= heartPosition.left && playerPosition.right <= heartPosition.right);
-    let bottomOverlap = (playerPosition.bottom >= heartPosition.top);
-    /*setInterval(() => {
-        let playerPosition = document.querySelector(".player").getBoundingClientRect();
-        for (const heart of document.querySelectorAll(".life-pickup"))
-        {
-            let heartPosition = heart.getBoundingClientRect();
-            
-            if(rightOverlap && bottomOverlap)
-            {
-                console.log("Heart COLLECTED!");
-            }
-        
-        }}, 10)*/
+    return heart.getBoundingClientRect();
+}
+
+function removeGameObject(gameObject, gameObjectArray) {
+    const index = gameObjectArray.indexOf(gameObject);
+    if (index !== -1) {
+        gameObjectArray.splice(index, 1);
+        gameObject.remove();
+    }
 }
 
 
-export { createObstacle, moveObstacles, createHeart, moveHeart, getObstacleHitbox, getHeartHitbox };
+export { createObstacle, moveObstacles, createHeart, moveHeart, getObstacleHitbox, getHeartHitbox, removeGameObject };
