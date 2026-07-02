@@ -1,4 +1,3 @@
-import { createObstacle, moveObstacles, moveHeart, createHeart, getObstacleHitbox, getHeartHitbox } from './obstacle.js';
 import { gameLoop, processPlayerInput } from './gameLoop.js';
 import { playerInput } from './player.js';
 
@@ -13,17 +12,5 @@ document.addEventListener('keyup', (event) => {
     playerInput.jump.isPressed = false;
   }
 });
-
-createObstacle();
-
-createHeart();
-
-moveObstacles();
-
-moveHeart();
-
-getObstacleHitbox();
-
-getHeartHitbox();
 
 requestAnimationFrame(gameLoop);

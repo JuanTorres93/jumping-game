@@ -14,17 +14,17 @@ const BOOKS = {
 }
 
 const NOTEBOOK = {
-    src: "..assets/obstacles/notebook.png",
+    src: "../assets/obstacles/notebook.png",
     placement: 20
 }
 
 const PAPERPLANE = {
-    src: "..assets/obstacles/paperplane.png",
+    src: "../assets/obstacles/paper_plane.png",
     placement: 0
 }
 
 const WETFLOOR = {
-    src: "..assets/obstacles/wetfloor.png",
+    src: "../assets/obstacles/wet_floor.png",
     placement: 20
 }
 
@@ -35,7 +35,7 @@ function chooseObstacleType() {
   return obstacleTypes[randomIndex];
 }
 
-async function createObstacle()
+function createObstacle()
 {
     const obstacleType = chooseObstacleType();
     const obstaclesContainer = document.querySelector(".obstacles");
@@ -47,24 +47,20 @@ async function createObstacle()
     obstacle.appendChild(obstacleImage);
     obstacleImage.setAttribute("src", obstacleType.src);
     obstaclesContainer.appendChild(obstacle);
-    setTimeout(() => {
-        createObstacle();
-    }, 1000);
 }
 
-function moveObstacles()
+function moveObstacles(timeBetweenFramesInSeconds)
 {
     for (const obstacle of document.querySelectorAll(".obstacle"))
     {
         const currentLeft = parseInt(obstacle.style.left) || -5;
-        const newLeft = currentLeft - 0.001;
+        const newLeft = currentLeft - (0.01 * timeBetweenFramesInSeconds);
         obstacle.style.left = newLeft + "rem";
         if (obstacle.style.left <= "-5rem")
         {
             obstacle.remove();
         }
     }
-    requestAnimationFrame(moveObstacles);
     
 }
 
@@ -78,24 +74,20 @@ function createHeart()
     heart.appendChild(heartImage);
     heartImage.setAttribute("src", "../assets/Heart.png");
     heartsContainer.appendChild(heart);
-    setTimeout(() => {
-        createHeart();
-    }, 10000);
 }
 
-function moveHeart()
+function moveHeart(timeBetweenFramesInSeconds)
 {
     for (const heart of document.querySelectorAll(".life-pickup"))
     {
         const currentLeft = parseInt(heart.style.left) || -5;
-        const newLeft = currentLeft - 0.1;
+        const newLeft = currentLeft - (0.1 * timeBetweenFramesInSeconds);
         heart.style.left = newLeft + "rem";
         if (heart.style.left <= "-5rem")
         {
             heart.remove();
         }
     }
-    requestAnimationFrame(moveHeart);
 }
 
 function getObstacleHitbox(playerPosition, obstaclePosition)
