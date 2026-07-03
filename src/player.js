@@ -20,7 +20,7 @@ const DUCK_HEIGHT = 60;
 const AIR_HEIGHT = 66;
 const GRAVITY = 1200;
 const JUMP_VELOCITY = 523;
-const DOUBLE_JUMP_VELOCITY = 300;
+const DOUBLE_JUMP_VELOCITY = 350;
 const FAST_FALL_VELOCITY = -900;
 
 export const playerData = {
@@ -142,7 +142,13 @@ export const playerData = {
 };
 
 export function getPlayerHitbox() {
-  return playerUI.getBoundingClientRect();
+  const playerRect = playerUI.getBoundingClientRect();
+  return {
+    top: playerRect.top,
+    right: playerRect.right * 0.8,
+    bottom: playerRect.bottom,
+    left: playerRect.left * 1.2,
+  }
 }
 
 export const playerInput = {
