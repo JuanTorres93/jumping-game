@@ -1,19 +1,24 @@
-import { playerData } from './player.js';
-import { gameLoop } from './gameLoop.js';
-import { updateLivesDisplay } from './collision-ui.js';
+import { playerData } from "./player.js";
+import { gameLoop } from "./gameLoop.js";
+import { updateLivesDisplay } from "./collision-ui.js";
+import {
+  startBackgroundMusic,
+  stopBackgroundMusic,
+  playGameOverSound,
+} from "./audio.js";
 
-export const game = document.getElementById('game');
-export const player = document.getElementById('player');
-export const playerImg = document.getElementById('playerImg');
-export const obstaclesContainer = document.getElementById('obstacles');
-export const heartsContainer = document.getElementById('hearts');
-export const lifeIcons = Array.from(document.querySelectorAll('#lives .heart'));
-export const scoreElement = document.getElementById('score');
-export const bestScoreElement = document.getElementById('bestScore');
-export const message = document.getElementById('message');
-export const messageTitle = document.getElementById('messageTitle');
-export const messageBody = document.getElementById('messageBody');
-export const startBtn = document.getElementById('startBtn');
+export const game = document.getElementById("game");
+export const player = document.getElementById("player");
+export const playerImg = document.getElementById("playerImg");
+export const obstaclesContainer = document.getElementById("obstacles");
+export const heartsContainer = document.getElementById("hearts");
+export const lifeIcons = Array.from(document.querySelectorAll("#lives .heart"));
+export const scoreElement = document.getElementById("score");
+export const bestScoreElement = document.getElementById("bestScore");
+export const message = document.getElementById("message");
+export const messageTitle = document.getElementById("messageTitle");
+export const messageBody = document.getElementById("messageBody");
+export const startBtn = document.getElementById("startBtn");
 
 export const MAX_LIVES = 3;
 export const HEART_BOTTOM = 290;
@@ -44,18 +49,18 @@ export function randomBetween(min, max) {
 
 export function showMessage(title, lines, buttonLabel) {
   messageTitle.textContent = title;
-  messageBody.innerHTML = '';
+  messageBody.innerHTML = "";
   lines.forEach((line) => {
-    const p = document.createElement('p');
+    const p = document.createElement("p");
     p.textContent = line;
     messageBody.appendChild(p);
   });
   startBtn.textContent = buttonLabel;
-  message.classList.remove('hidden');
+  message.classList.remove("hidden");
 }
 
 export function hideMessage() {
-  message.classList.add('hidden');
+  message.classList.add("hidden");
 }
 
 export function resetGame() {
@@ -77,19 +82,24 @@ export function resetGame() {
   updateLivesDisplay(state);
 
   scoreElement.textContent = state.score;
-  obstaclesContainer.innerHTML = '';
-  heartsContainer.innerHTML = '';
-  player.classList.remove('duck', 'invulnerable');
-  player.style.bottom = '0px';
+  obstaclesContainer.innerHTML = "";
+  heartsContainer.innerHTML = "";
+  player.classList.remove("duck", "invulnerable");
+  player.style.bottom = "0px";
   hideMessage();
 
   if (state.animationId) cancelAnimationFrame(state.animationId);
   state.animationId = requestAnimationFrame(gameLoop);
+  startBackgroundMusic();
 }
 
 export function endGame() {
   state.gameRunning = false;
   state.gameOver = true;
+
+  stopBackgroundMusic();
+  playGameOverSound();
+
   cancelAnimationFrame(state.animationId);
 
   if (state.score > state.bestScore) {
@@ -98,12 +108,12 @@ export function endGame() {
   }
 
   showMessage(
-    'Game Over',
+    "Game Over",
     [
-      'You got caught in the hallway!',
+      "You got caught in the hallway!",
       `Final score: ${state.score}`,
-      'Press R, Enter, or the button to try again.',
+      "Press R, Enter, or the button to try again.",
     ],
-    'Restart Game',
+    "Restart Game",
   );
 }
