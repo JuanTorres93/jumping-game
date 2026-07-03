@@ -8,7 +8,12 @@ import {
 
 export const playerUI = document.getElementById('player');
 
-// TODO: remove img element from HTML, it breaks the floor, so I'm not doing it now due to time constraints.
+const runImagesUrls = [
+  '../assets/player/run-images/run1.webp',
+  '../assets/player/run-images/run2.webp',
+  '../assets/player/run-images/run3.webp',
+];
+
 const playerImage = playerUI.querySelector('img');
 playerImage.src = '../assets/player/student_stand.png';
 
@@ -27,6 +32,9 @@ export const playerData = {
   distanceDuringJumpInPixels: 0,
   jumpBlocked: false,
   jumpState: 'grounded', // "grounded", "jumping", "falling
+  walkFrameIndex: 0,
+  walkFrameElapsedInSeconds: 0,
+  WALK_FRAME_DURATION_IN_SECONDS: 0.12,
 
   isDucking: false,
 
@@ -70,7 +78,9 @@ export const playerData = {
     this.heightInPixels = PLAYER_HEIGHT;
     this.isDucking = false;
 
-    playerImage.src = '../assets/player/student_run_right_leg_front.png';
+    if (this.walkFrameIndex === 0) {
+      playerImage.src = runImagesUrls[this.walkFrameIndex];
+    }
   },
 
   canJump() {
@@ -141,7 +151,7 @@ export const playerData = {
       );
     } else {
       if (!this.isDucking) {
-        playerImage.src = '../assets/player/student_run_right_leg_front.png';
+        this.walkAnimation();
       }
       return;
     }
@@ -153,6 +163,18 @@ export const playerData = {
     }
   },
 
+  walkAnimation() {
+    this.walkFrameElapsedInSeconds += this.timeBetweenFramesInSeconds;
+
+    if (this.walkFrameElapsedInSeconds < this.WALK_FRAME_DURATION_IN_SECONDS) {
+      return;
+    }
+
+    this.walkFrameElapsedInSeconds = 0;
+    this.walkFrameIndex = (this.walkFrameIndex + 1) % runImagesUrls.length;
+    playerImage.src = runImagesUrls[this.walkFrameIndex];
+  },
+
   reset() {
     this.verticalPositionInPixels = 0;
     this.verticalSpeed = 0;
@@ -161,6 +183,8 @@ export const playerData = {
     this.jumpBlocked = false;
     this.heightInPixels = PLAYER_HEIGHT;
     this.isDucking = false;
+    this.walkFrameIndex = 0;
+    this.walkFrameElapsedInSeconds = 0;
 
     playerImage.src = '../assets/player/student_stand.png';
   },
