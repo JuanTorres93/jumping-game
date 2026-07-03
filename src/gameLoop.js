@@ -41,6 +41,7 @@ export function gameLoop(currentTime) {
   checkHeartPickup();
 
   playerUI.style.bottom = `${playerData.verticalPositionInPixels}px`;
+  playerUI.style.height = `${playerData.heightInPixels}px`;
 
   // Stop condition, change as needed during development
   //if (playerData.verticalPositionInPixels <= 0) {
@@ -60,5 +61,11 @@ export function processPlayerInput() {
 
   if (!playerInput.jump.isPressed && !playerData.canJump()) {
     playerData.blockJump();
+  }
+
+  if (playerInput.duck.isPressed) {
+    playerData.duck();
+  } else {
+    playerData.standUp();
   }
 }

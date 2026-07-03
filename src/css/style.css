@@ -1,18 +1,3 @@
-:root {
-  --bg: #f7efe2;
-  --ink: #21243d;
-  --school-red: #e85d75;
-  --school-blue: #4d96ff;
-  --school-yellow: #ffd166;
-  --floor: #7c5c47;
-  --floor-line: #604231;
-  --shadow: rgba(33, 36, 61, 0.18);
-}
-
-* {
-  box-sizing: border-box;
-}
-
 body {
   margin: 0;
   min-height: 100vh;
@@ -153,11 +138,7 @@ p {
   left: 92px;
   bottom: 0px;
   width: 70px;
-  height: 92px;
   z-index: 6;
-  transition:
-    width 0.08s ease,
-    height 0.08s ease;
 }
 
 .player img {
