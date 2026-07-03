@@ -133,6 +133,10 @@ export const playerData = {
   },
 };
 
+export function getPlayerHitbox() {
+  return playerUI.getBoundingClientRect();
+}
+
 export const playerInput = {
   jump: {
     key: ' ',

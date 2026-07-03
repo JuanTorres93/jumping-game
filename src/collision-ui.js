@@ -1,4 +1,6 @@
-import { gameState } from "./engine.js";
+import { state, player, endGame, lifeIcons } from "./engine.js";
+import { getPlayerHitbox, playerData } from "./player.js";
+import { getObstacleHitbox, getHeartHitbox, removeGameObject } from "./obstacle.js";
 
 /* ---------- Constants ---------- */
 
@@ -35,37 +37,37 @@ function rectanglesOverlap(firstHitbox, secondHitbox) {
 }
 
 function checkCollision(currentTime) {
-  if (currentTime < gameState.invulnerableUntil) {
+  if (currentTime < state.invulnerableUntil) {
     return;
   }
 
   const playerHitbox = getPlayerHitbox();
 
-  for (const obstacle of gameState.obstacles) {
+  for (const obstacle of state.obstacles) {
     const obstacleHitbox = getObstacleHitbox(obstacle);
 
     if (!rectanglesOverlap(playerHitbox, obstacleHitbox)) {
       continue;
     }
 
-    removeGameObject(obstacle, gameState.obstacles);
+    removeGameObject(obstacle, state.obstacles);
 
-    gameState.lives--;
+    state.lives--;
 
-    updateLivesDisplay();
+    updateLivesDisplay("lost");
 
-    if (gameState.lives <= 0) {
+    if (state.lives <= 0) {
       endGame();
       return;
     }
 
-    gameState.invulnerableUntil = currentTime + INVULNERABILITY_DURATION;
+    state.invulnerableUntil = currentTime + INVULNERABILITY_DURATION;
 
     // TODO: Replace with the player element accessor once implemented.
-    player.element.classList.add("blinking");
+    player.classList.add("blinking");
 
     setTimeout(() => {
-      player.element.classList.remove("blinking");
+      player.classList.remove("blinking");
     }, INVULNERABILITY_DURATION);
 
     return;
@@ -75,18 +77,18 @@ function checkCollision(currentTime) {
 function checkHeartPickup() {
   const playerHitbox = getPlayerHitbox();
 
-  for (const heart of gameState.hearts) {
+  for (const heart of state.hearts) {
     const heartHitbox = getHeartHitbox(heart);
 
     if (!rectanglesOverlap(playerHitbox, heartHitbox)) {
       continue;
     }
 
-    removeGameObject(heart, gameState.hearts);
+    removeGameObject(heart, state.hearts);
 
-    gameState.lives = Math.min(gameState.lives + 1, MAX_LIVES);
+    state.lives = Math.min(state.lives + 1, MAX_LIVES);
 
-    updateLivesDisplay();
+    updateLivesDisplay("gained");
 
     return;
   }
@@ -94,14 +96,32 @@ function checkHeartPickup() {
 
 /* ---------- UI ---------- */
 
-function updateLivesDisplay() {
-  const heartsElement = document.getElementById("hearts");
-
-  if (!heartsElement) {
+function updateLivesDisplay(result) {
+  if (!lifeIcons) {
     return;
   }
 
-  heartsElement.textContent = "❤️".repeat(gameState.lives);
+  if(result === "lost")
+  {
+    for (let i = lifeIcons.length - 1; i >= 0 ; i--) {
+    if(!lifeIcons[i].classList.contains("lost"))
+    {
+      lifeIcons[i].classList.add("lost");
+      break;
+    }
+      
+  }
+  }
+  else
+  {
+    for (let i = 0; i < lifeIcons.length; i++) {
+    if(lifeIcons[i].classList.contains("lost"))
+    {
+      lifeIcons[i].classList.remove("lost");
+      break;
+    }
+  }
+  }
 }
 
 function showMessage(title, lines, buttonText) {
