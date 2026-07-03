@@ -1,15 +1,12 @@
 /* ---------- Configuration ---------- */
 
 const SOUND_SOURCES = {
-  backgroundMusic: new URL(
-    '../assets/audio/background-music.mp3',
-    import.meta.url,
-  ).href,
-  jump: new URL('../assets/audio/jump.mp3', import.meta.url).href,
-  doubleJump: new URL('../assets/audio/double-jump.mp3', import.meta.url).href,
-  hit: new URL('../assets/audio/hit.mp3', import.meta.url).href,
-  heart: new URL('../assets/audio/heart.mp3', import.meta.url).href,
-  gameOver: new URL('../assets/audio/game-over.mp3', import.meta.url).href,
+  backgroundMusic: "../assets/audio/background-music.mp3",
+  jump: "../assets/audio/jump.mp3",
+  doubleJump: "../assets/audio/double-jump.mp3",
+  hit: "../assets/audio/hit.mp3",
+  heart: "../assets/audio/heart.mp3",
+  gameOver: "../assets/audio/game-over.mp3",
 };
 
 const DEFAULT_MUSIC_VOLUME = 0.5;

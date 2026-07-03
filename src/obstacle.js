@@ -14,7 +14,7 @@ const FRAMES_PER_SECOND_REFERENCE = 60;
 
 const BACKPACK = {
   name: 'Backpack',
-  src: new URL('../assets/obstacles/backpack.png', import.meta.url).href,
+  src: '../assets/obstacles/backpack.png',
   heightType: 'low',
   width: 49,
   height: 60,
@@ -23,7 +23,7 @@ const BACKPACK = {
 
 const BASKETBALL = {
   name: 'Basketball',
-  src: new URL('../assets/obstacles/basketball.png', import.meta.url).href,
+  src: '../assets/obstacles/basketball.png',
   heightType: 'high',
   width: 54,
   height: 54,
@@ -32,7 +32,7 @@ const BASKETBALL = {
 
 const BOOKS = {
   name: 'Books',
-  src: new URL('../assets/obstacles/books.png', import.meta.url).href,
+  src: '../assets/obstacles/books.png',
   heightType: 'low',
   width: 56,
   height: 56,
@@ -41,7 +41,7 @@ const BOOKS = {
 
 const NOTEBOOK = {
   name: 'Flying Notebook',
-  src: new URL('../assets/obstacles/notebook.png', import.meta.url).href,
+  src: '../assets/obstacles/notebook.png',
   heightType: 'high',
   width: 58,
   height: 48,
@@ -50,7 +50,7 @@ const NOTEBOOK = {
 
 const PAPERPLANE = {
   name: 'Paper Plane',
-  src: new URL('../assets/obstacles/paper_plane.png', import.meta.url).href,
+  src: '../assets/obstacles/paper_plane.png',
   heightType: 'high',
   width: 70,
   height: 30,
@@ -59,21 +59,14 @@ const PAPERPLANE = {
 
 const WETFLOOR = {
   name: 'Wet Floor Sign',
-  src: new URL('../assets/obstacles/wet_floor.png', import.meta.url).href,
+  src: '../assets/obstacles/wet_floor.png',
   heightType: 'low',
   width: 38,
   height: 63,
   points: 1,
 };
 
-const obstacleTypes = [
-  BACKPACK,
-  BASKETBALL,
-  BOOKS,
-  NOTEBOOK,
-  PAPERPLANE,
-  WETFLOOR,
-];
+const obstacleTypes = [BACKPACK, BASKETBALL, BOOKS, NOTEBOOK, PAPERPLANE, WETFLOOR];
 
 const MIN_HEART_HIGH_OBSTACLE_GAP = 260;
 
@@ -124,13 +117,11 @@ function createObstacle() {
 
   const minimumGap = Math.max(720, 1450 - state.speed * 55);
   const maximumGap = Math.max(1050, 2400 - state.speed * 70);
-  state.nextObstacleAt =
-    performance.now() + randomBetween(minimumGap, maximumGap);
+  state.nextObstacleAt = performance.now() + randomBetween(minimumGap, maximumGap);
 }
 
 function moveObstacles(timeBetweenFramesInSeconds) {
-  const movement =
-    state.speed * timeBetweenFramesInSeconds * FRAMES_PER_SECOND_REFERENCE;
+  const movement = state.speed * timeBetweenFramesInSeconds * FRAMES_PER_SECOND_REFERENCE;
 
   state.obstacles.forEach((obstacle) => {
     obstacle.x -= movement;
@@ -180,8 +171,7 @@ function createHeart() {
 }
 
 function moveHeart(timeBetweenFramesInSeconds) {
-  const movement =
-    state.speed * timeBetweenFramesInSeconds * FRAMES_PER_SECOND_REFERENCE;
+  const movement = state.speed * timeBetweenFramesInSeconds * FRAMES_PER_SECOND_REFERENCE;
 
   for (const heart of state.hearts) {
     heart.x -= movement;
