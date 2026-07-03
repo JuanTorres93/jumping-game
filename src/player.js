@@ -160,13 +160,17 @@ export const playerData = {
   },
 };
 
+const PLAYER_HITBOX_HORIZONTAL_INSET_RATIO = 0.2;
+
 export function getPlayerHitbox() {
   const playerRect = playerUI.getBoundingClientRect();
+  const horizontalInset =
+    playerRect.width * PLAYER_HITBOX_HORIZONTAL_INSET_RATIO;
   return {
     top: playerRect.top,
-    right: playerRect.right * 0.8,
+    right: playerRect.right - horizontalInset,
     bottom: playerRect.bottom,
-    left: playerRect.left * 1.2,
+    left: playerRect.left + horizontalInset,
   };
 }
 
