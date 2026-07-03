@@ -139,9 +139,6 @@ p {
   bottom: 0px;
   width: 70px;
   z-index: 6;
-  transition:
-    width 0.08s ease,
-    height 0.08s ease;
 }
 
 .player img {

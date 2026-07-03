@@ -76,7 +76,7 @@ export const playerData = {
     if (this.jumpState !== 'grounded') return;
 
     playerImage.src = '../assets/player/student_duck.png';
-    this.heightInPixels = PLAYER_HEIGHT / 1.2;
+    this.heightInPixels = PLAYER_HEIGHT / 1.5;
 
     this.isDucking = true;
   },
