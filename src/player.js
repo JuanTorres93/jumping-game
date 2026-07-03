@@ -14,6 +14,12 @@ const runImagesUrls = [
   '../assets/player/run-images/run3.webp',
 ];
 
+const jumpImagesUrls = {
+  rising: '../assets/player/jump-images/jump-rising.webp',
+  top: '../assets/player/jump-images/jump-top.webp',
+  falling: '../assets/player/jump-images/jump-falling.webp',
+};
+
 const playerImage = playerUI.querySelector('img');
 playerImage.src = '../assets/player/student_stand.png';
 
@@ -55,6 +61,7 @@ export const playerData = {
     if (this.jumpBlocked || (!this.canJump() && !this.isJumping())) return;
 
     this.jumpState = 'jumping';
+    playerImage.src = jumpImagesUrls.rising;
 
     const velocityIncrement = velocityIncrementInPxPerSecond(
       this.timeBetweenFramesInSeconds,
@@ -123,7 +130,7 @@ export const playerData = {
     let positionIncrement = 0;
 
     if (this.jumpState === 'jumping') {
-      playerImage.src = '../assets/player/student_jump.png';
+      playerImage.src = jumpImagesUrls.rising;
 
       positionIncrement =
         uniformlyAcceleratedRectilinearMotionPositionIncrementInPx(
@@ -143,8 +150,11 @@ export const playerData = {
       if (this.hasReachedMaxJumpHeight()) {
         this.jumpState = 'falling';
         this.verticalSpeed = 0;
+        playerImage.src = jumpImagesUrls.top;
       }
     } else if (this.jumpState === 'falling') {
+      playerImage.src = jumpImagesUrls.falling;
+
       positionIncrement = gravityPositionIncrementInPx(
         this.timeBetweenFramesInSeconds,
         this.verticalSpeed,
