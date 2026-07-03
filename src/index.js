@@ -4,13 +4,17 @@ import { playerInput, playerUI, playerData } from './player.js';
 document.addEventListener('keydown', (event) => {
   if (event.key === playerInput.jump.key) {
     playerInput.jump.isPressed = true;
+
+    if (!event.repeat) {
+      playerData.jump();
+    }
   }
 
   if (event.key === playerInput.duck.key) {
     playerInput.duck.isPressed = true;
   }
 
-  if (event.key === 'r' || event.key === 'R') {
+  if (event.key === 'r' || event.key === 'R' || event.key === 'Enter') {
     resetGame();
   }
 });

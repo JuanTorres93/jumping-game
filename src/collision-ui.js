@@ -1,11 +1,10 @@
-import { state, player, endGame, lifeIcons } from "./engine.js";
+import { state, player, endGame, lifeIcons, INVULNERABLE_DURATION } from "./engine.js";
 import { getPlayerHitbox, playerData } from "./player.js";
 import { getObstacleHitbox, getHeartHitbox, removeGameObject } from "./obstacle.js";
 
 /* ---------- Constants ---------- */
 
 const MAX_LIVES = 3;
-const INVULNERABILITY_DURATION = 1500;
 const BEST_SCORE_KEY = "bestScore";
 
 /* ---------- Collision ---------- */
@@ -54,21 +53,20 @@ function checkCollision(currentTime) {
 
     state.lives--;
 
-    updateLivesDisplay("lost");
+    updateLivesDisplay(state);
 
     if (state.lives <= 0) {
       endGame();
       return;
     }
 
-    state.invulnerableUntil = currentTime + INVULNERABILITY_DURATION;
+    state.invulnerableUntil = currentTime + INVULNERABLE_DURATION;
 
-    // TODO: Replace with the player element accessor once implemented.
-    player.classList.add("blinking");
+    player.classList.add("invulnerable");
 
     setTimeout(() => {
-      player.classList.remove("blinking");
-    }, INVULNERABILITY_DURATION);
+      player.classList.remove("invulnerable");
+    }, INVULNERABLE_DURATION);
 
     return;
   }
@@ -88,7 +86,7 @@ function checkHeartPickup() {
 
     state.lives = Math.min(state.lives + 1, MAX_LIVES);
 
-    updateLivesDisplay("gained");
+    updateLivesDisplay(state);
 
     return;
   }
@@ -96,32 +94,14 @@ function checkHeartPickup() {
 
 /* ---------- UI ---------- */
 
-function updateLivesDisplay(result) {
+function updateLivesDisplay(state) {
   if (!lifeIcons) {
     return;
   }
 
-  if(result === "lost")
-  {
-    for (let i = lifeIcons.length - 1; i >= 0 ; i--) {
-    if(!lifeIcons[i].classList.contains("lost"))
-    {
-      lifeIcons[i].classList.add("lost");
-      break;
-    }
-      
-  }
-  }
-  else
-  {
-    for (let i = 0; i < lifeIcons.length; i++) {
-    if(lifeIcons[i].classList.contains("lost"))
-    {
-      lifeIcons[i].classList.remove("lost");
-      break;
-    }
-  }
-  }
+  lifeIcons.forEach((icon, index) => {
+    icon.classList.toggle("lost", index >= state.lives);
+  });
 }
 
 function showMessage(title, lines, buttonText) {
@@ -182,7 +162,7 @@ function saveBestScore(score) {
 /* ---------- Initialization ---------- */
 
 function initializeGameUI() {
-  updateLivesDisplay();
+  updateLivesDisplay(state);
   hideMessage();
 }
 

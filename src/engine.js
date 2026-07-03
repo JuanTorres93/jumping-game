@@ -1,5 +1,6 @@
 import { playerData } from './player.js';
 import { gameLoop } from './gameLoop.js';
+import { updateLivesDisplay } from './collision-ui.js';
 
 export const game = document.getElementById('game');
 export const player = document.getElementById('player');
@@ -15,9 +16,9 @@ export const messageBody = document.getElementById('messageBody');
 export const startBtn = document.getElementById('startBtn');
 
 export const MAX_LIVES = 3;
-export const HEART_BOTTOM = 270;
-export const HEART_SIZE = 40;
-export const INVULNERABLE_DURATION = 1100;
+export const HEART_BOTTOM = 290;
+export const HEART_SIZE = 50;
+export const INVULNERABLE_DURATION = 500;
 
 export const state = {
   gameRunning: false,
@@ -73,6 +74,7 @@ export function resetGame() {
   state.nextHeartAt = performance.now() + randomBetween(9000, 14000);
 
   playerData.reset();
+  updateLivesDisplay(state);
 
   scoreElement.textContent = state.score;
   obstaclesContainer.innerHTML = '';
@@ -100,7 +102,7 @@ export function endGame() {
     [
       'You got caught in the hallway!',
       `Final score: ${state.score}`,
-      'Press R or the button to try again.',
+      'Press R, Enter, or the button to try again.',
     ],
     'Restart Game',
   );

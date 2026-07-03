@@ -21,17 +21,14 @@ export function gameLoop(currentTime) {
 
   playerData.setTimeBetweenFramesInSeconds(timeBetweenFramesInSeconds);
   processPlayerInput();
-  playerData.applyGravity();
   playerData.updatePosition();
 
-  if (state.nextObstacleAt <= 0) {
+  if (currentTime >= state.nextObstacleAt) {
     createObstacle();
-    state.nextObstacleAt = 2000; // 1000 ms = 1 second
   }
 
-  if (state.nextHeartAt <= 0) {
+  if (currentTime >= state.nextHeartAt) {
     createHeart();
-    state.nextHeartAt = 10000;
   }
 
   moveObstacles(timeBetweenFramesInSeconds);
@@ -43,26 +40,10 @@ export function gameLoop(currentTime) {
   playerUI.style.bottom = `${playerData.verticalPositionInPixels}px`;
   playerUI.style.height = `${playerData.heightInPixels}px`;
 
-  // Stop condition, change as needed during development
-  //if (playerData.verticalPositionInPixels <= 0) {
-  //  return;
-  //}
-
-  state.nextObstacleAt -= timeBetweenFramesInSeconds * 1000;
-  state.nextHeartAt -= timeBetweenFramesInSeconds * 1000;
-
   state.animationId = requestAnimationFrame(gameLoop);
 }
 
 export function processPlayerInput() {
-  if (playerInput.jump.isPressed) {
-    playerData.jump();
-  }
-
-  if (!playerInput.jump.isPressed && !playerData.canJump()) {
-    playerData.blockJump();
-  }
-
   if (playerInput.duck.isPressed) {
     playerData.duck();
   } else {
