@@ -1,6 +1,17 @@
-import { state, player, endGame, lifeIcons, INVULNERABLE_DURATION } from "./engine.js";
+import {
+  state,
+  player,
+  endGame,
+  lifeIcons,
+  INVULNERABLE_DURATION,
+} from "./engine.js";
 import { getPlayerHitbox, playerData } from "./player.js";
-import { getObstacleHitbox, getHeartHitbox, removeGameObject } from "./obstacle.js";
+import {
+  getObstacleHitbox,
+  getHeartHitbox,
+  removeGameObject,
+} from "./obstacle.js";
+import { playHeartSound, playHitSound } from "./audio.js";
 
 /* ---------- Constants ---------- */
 
@@ -51,6 +62,8 @@ function checkCollision(currentTime) {
 
     removeGameObject(obstacle, state.obstacles);
 
+    playHitSound();
+
     state.lives--;
 
     updateLivesDisplay(state);
@@ -83,6 +96,8 @@ function checkHeartPickup() {
     }
 
     removeGameObject(heart, state.hearts);
+
+    playHeartSound();
 
     state.lives = Math.min(state.lives + 1, MAX_LIVES);
 
