@@ -1,79 +1,75 @@
 <!doctype html>
 
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exam Rush</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="src/css/style.css" />
+    <script type="module" src="./src/index.js" defer></script>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exam Rush</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@400;600;700&display=swap"
-    rel="stylesheet">
-  <link rel="stylesheet" href="src/css/style.css" />
-  <script type="module" src="./src/index.js" defer></script>
-</head>
-
-<body>
-
-  <main class="page">
-
-    <section class="game-card">
-
-      <header class="game-header">
-
-        <div>
-          <h1>Exam Rush</h1>
-          <p>Jump over school mess. Duck under flying trouble.</p>
-        </div>
-
-        <div class="score-panel" aria-live="polite">
-          <span>Score: <strong id="score">0</strong></span>
-          <span>Best: <strong id="bestScore">0</strong></span>
-          <span id="lives" class="lives" aria-label="Lives remaining">
-            <span class="heart">♥</span><span class="heart">♥</span><span class="heart">♥</span>
-          </span>
-        </div>
-
-      </header>
-
-      <section id="game" class="game" aria-label="School Escape game area">
-        <div class="background-layer background-back">
-          <div id="player" class="player" aria-label="Student character">
-            <img id="playerImg" src="assets/player/student_stand.png" alt="Student standing" draggable="false" />
+  <body>
+    <main class="page">
+      <section class="game-card">
+        <header class="game-header">
+          <div>
+            <h1>Exam Rush</h1>
+            <p>Jump over school mess. Duck under flying trouble.</p>
           </div>
-        </div>
 
-        <div id="obstacles" class="obstacles"></div>
-        <div id="hearts" class="hearts"></div>
-        <div class="floor"></div>
-
-        <div id="message" class="message">
-          <h2 id="messageTitle">Exam Rush</h2>
-          <div id="messageBody">
-            <p>Press <kbd>Space</kbd> or <kbd>↑</kbd> to jump.</p>
-            <p>Hold <kbd>↓</kbd> to duck under flying objects.</p>
-            <p>
-              Jump twice to double-jump and grab
-              <span class="heart-inline">♥</span> for an extra life.
-            </p>
+          <div class="score-panel" aria-live="polite">
+            <span>Score: <strong id="score">0</strong></span>
+            <span>Best: <strong id="bestScore">0</strong></span>
+            <span id="lives" class="lives" aria-label="Lives remaining">
+              <span class="heart">♥</span><span class="heart">♥</span
+              ><span class="heart">♥</span>
+            </span>
           </div>
-          <button id="startBtn" type="button">Start Game</button>
-        </div>
+        </header>
+
+        <section id="game" class="game" aria-label="School Escape game area">
+          <div class="background-layer background-back">
+            <div id="player" class="player" aria-label="Student character">
+              <img
+                id="playerImg"
+                src="assets/player/student_stand.png"
+                alt="Student standing"
+                draggable="false"
+              />
+            </div>
+          </div>
+
+          <div id="obstacles" class="obstacles"></div>
+          <div id="hearts" class="hearts"></div>
+          <div class="floor"></div>
+
+          <div id="message" class="message">
+            <h2 id="messageTitle">Exam Rush</h2>
+            <div id="messageBody">
+              <p>Press <kbd>Space</kbd> or <kbd>↑</kbd> to jump.</p>
+              <p>Hold <kbd>↓</kbd> to duck under flying objects.</p>
+              <p>
+                Jump twice to double-jump and grab
+                <span class="heart-inline">♥</span> for an extra life.
+              </p>
+            </div>
+            <button id="startBtn" type="button">Start Game</button>
+          </div>
+        </section>
+
+        <footer class="controls">
+          <span><kbd>Space</kbd> / <kbd>↑</kbd> Jump (x2 to double-jump)</span>
+          <span><kbd>↓</kbd> Duck</span>
+          <span><kbd>R</kbd> Restart</span>
+        </footer>
       </section>
-
-      <footer class="controls">
-
-        <span><kbd>Space</kbd> / <kbd>↑</kbd> Jump (x2 to double-jump)</span>
-        <span><kbd>↓</kbd> Duck</span>
-        <span><kbd>R</kbd> Restart</span>
-
-      </footer>
-
-    </section>
-
-  </main>
-
-</body>
-
+    </main>
+  </body>
 </html>
