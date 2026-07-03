@@ -1,20 +1,30 @@
-import { playJumpSound, playDoubleJumpSound } from "./audio.js";
-export const playerUI = document.getElementById("player");
+import { playJumpSound, playDoubleJumpSound } from './audio.js';
+export const playerUI = document.getElementById('player');
 
 const runImagesUrls = [
-  "../assets/player/run-images/run1.webp",
-  "../assets/player/run-images/run2.webp",
-  "../assets/player/run-images/run3.webp",
+  new URL('../assets/player/run-images/run1.webp', import.meta.url).href,
+  new URL('../assets/player/run-images/run2.webp', import.meta.url).href,
+  new URL('../assets/player/run-images/run3.webp', import.meta.url).href,
 ];
 
 const jumpImagesUrls = {
-  rising: "../assets/player/jump-images/jump-rising.webp",
-  top: "../assets/player/jump-images/jump-top.webp",
-  falling: "../assets/player/jump-images/jump-falling.webp",
+  rising: new URL(
+    '../assets/player/jump-images/jump-rising.webp',
+    import.meta.url,
+  ).href,
+  top: new URL('../assets/player/jump-images/jump-top.webp', import.meta.url)
+    .href,
+  falling: new URL(
+    '../assets/player/jump-images/jump-falling.webp',
+    import.meta.url,
+  ).href,
 };
 
-const playerImage = playerUI.querySelector("img");
-playerImage.src = "../assets/player/student_stand.png";
+const playerImage = playerUI.querySelector('img');
+playerImage.src = new URL(
+  '../assets/player/student_stand.png',
+  import.meta.url,
+).href;
 
 const PLAYER_HEIGHT = 106;
 const DUCK_HEIGHT = 60;
@@ -31,7 +41,7 @@ export const playerData = {
 
   verticalPositionInPixels: 0,
 
-  jumpState: "grounded", // "grounded", "jumping", "falling"
+  jumpState: 'grounded', // "grounded", "jumping", "falling"
   jumpCount: 0, // 0 = grounded, 1 = single jump used, 2 = double jump used
 
   walkFrameIndex: 0,
@@ -47,7 +57,7 @@ export const playerData = {
 
     if (this.jumpCount === 0) {
       playJumpSound();
-      this.jumpState = "jumping";
+      this.jumpState = 'jumping';
       this.verticalSpeed = JUMP_VELOCITY;
       this.jumpCount = 1;
       playerImage.src = jumpImagesUrls.rising;
@@ -62,18 +72,21 @@ export const playerData = {
   duck() {
     this.isDucking = true;
 
-    if (this.jumpState !== "grounded") {
+    if (this.jumpState !== 'grounded') {
       this.verticalSpeed = Math.min(this.verticalSpeed, FAST_FALL_VELOCITY);
       return;
     }
 
-    playerUI.classList.add("duck");
-    playerImage.src = "../assets/player/student_duck.png";
+    playerUI.classList.add('duck');
+    playerImage.src = new URL(
+      '../assets/player/student_duck.png',
+      import.meta.url,
+    ).href;
     this.heightInPixels = DUCK_HEIGHT;
   },
 
   standUp() {
-    playerUI.classList.remove("duck");
+    playerUI.classList.remove('duck');
     this.heightInPixels = PLAYER_HEIGHT;
     this.isDucking = false;
 
@@ -87,15 +100,15 @@ export const playerData = {
   },
 
   updatePosition() {
-    if (this.jumpState === "grounded") {
-      playerUI.classList.remove("jumping");
+    if (this.jumpState === 'grounded') {
+      playerUI.classList.remove('jumping');
       if (!this.isDucking) {
         this.walkAnimation();
       }
       return;
     }
 
-    playerUI.classList.add("jumping");
+    playerUI.classList.add('jumping');
     this.heightInPixels = AIR_HEIGHT;
 
     const dt = this.timeBetweenFramesInSeconds;
@@ -103,10 +116,10 @@ export const playerData = {
     this.verticalPositionInPixels += this.verticalSpeed * dt;
     this.verticalSpeed -= GRAVITY * dt;
 
-    if (this.jumpState === "jumping" && this.verticalSpeed <= 0) {
-      this.jumpState = "falling";
+    if (this.jumpState === 'jumping' && this.verticalSpeed <= 0) {
+      this.jumpState = 'falling';
       playerImage.src = jumpImagesUrls.top;
-    } else if (this.jumpState === "jumping") {
+    } else if (this.jumpState === 'jumping') {
       playerImage.src = jumpImagesUrls.rising;
     } else {
       playerImage.src = jumpImagesUrls.falling;
@@ -132,15 +145,18 @@ export const playerData = {
   reset() {
     this.verticalPositionInPixels = 0;
     this.verticalSpeed = 0;
-    this.jumpState = "grounded";
+    this.jumpState = 'grounded';
     this.jumpCount = 0;
     this.heightInPixels = PLAYER_HEIGHT;
     this.isDucking = false;
     this.walkFrameIndex = 0;
     this.walkFrameElapsedInSeconds = 0;
 
-    playerUI.classList.remove("duck", "jumping");
-    playerImage.src = "../assets/player/student_stand.png";
+    playerUI.classList.remove('duck', 'jumping');
+    playerImage.src = new URL(
+      '../assets/player/student_stand.png',
+      import.meta.url,
+    ).href;
   },
 };
 
@@ -151,17 +167,17 @@ export function getPlayerHitbox() {
     right: playerRect.right * 0.8,
     bottom: playerRect.bottom,
     left: playerRect.left * 1.2,
-  }
+  };
 }
 
 export const playerInput = {
   jump: {
-    key: " ",
+    key: ' ',
     isPressed: false,
   },
 
   duck: {
-    key: "ArrowDown",
+    key: 'ArrowDown',
     isPressed: false,
   },
 };
