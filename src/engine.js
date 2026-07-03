@@ -5,6 +5,8 @@ import {
   startBackgroundMusic,
   stopBackgroundMusic,
   playGameOverSound,
+  setMusicVolume,
+  setSfxVolume,
 } from "./audio.js";
 
 export const game = document.getElementById("game");
@@ -19,6 +21,8 @@ export const message = document.getElementById("message");
 export const messageTitle = document.getElementById("messageTitle");
 export const messageBody = document.getElementById("messageBody");
 export const startBtn = document.getElementById("startBtn");
+export const musicSlider = document.getElementById("musicSlider");
+export const sfxSlider = document.getElementById("sfxSlider");
 
 export const MAX_LIVES = 3;
 export const HEART_BOTTOM = 290;
@@ -117,3 +121,11 @@ export function endGame() {
     "Restart Game",
   );
 }
+
+  musicSlider.oninput = () => {
+    setMusicVolume(musicSlider.value / 100);
+  }
+
+  sfxSlider.oninput = () => {
+    setSfxVolume(sfxSlider.value / 100);
+  }
