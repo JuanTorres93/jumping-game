@@ -1,6 +1,11 @@
 import { playJumpSound, playDoubleJumpSound } from './audio.js';
 export const playerUI = document.getElementById('player');
 
+const standImageUrl = new URL(
+  '../assets/player/student_stand.png',
+  import.meta.url,
+).href;
+
 const runImagesUrls = [
   new URL('../assets/player/run-images/run1.webp', import.meta.url).href,
   new URL('../assets/player/run-images/run2.webp', import.meta.url).href,
@@ -21,10 +26,26 @@ const jumpImagesUrls = {
 };
 
 const playerImage = playerUI.querySelector('img');
-playerImage.src = new URL(
-  '../assets/player/student_stand.png',
-  import.meta.url,
-).href;
+
+const playerSpriteUrls = [
+  standImageUrl,
+  new URL('../assets/player/student_duck.png', import.meta.url).href,
+  ...runImagesUrls,
+  jumpImagesUrls.rising,
+  jumpImagesUrls.top,
+  jumpImagesUrls.falling,
+];
+
+playerSpriteUrls.forEach((spriteUrl) => {
+  const image = new Image();
+  image.src = spriteUrl;
+});
+
+function setPlayerSprite(spriteUrl) {
+  if (playerImage.src !== spriteUrl) {
+    playerImage.src = spriteUrl;
+  }
+}
 
 const PLAYER_HEIGHT = 106;
 const DUCK_HEIGHT = 60;
@@ -60,12 +81,12 @@ export const playerData = {
       this.jumpState = 'jumping';
       this.verticalSpeed = JUMP_VELOCITY;
       this.jumpCount = 1;
-      playerImage.src = jumpImagesUrls.rising;
+      setPlayerSprite(jumpImagesUrls.rising);
     } else if (this.jumpCount === 1) {
       playDoubleJumpSound();
       this.verticalSpeed = DOUBLE_JUMP_VELOCITY;
       this.jumpCount = 2;
-      playerImage.src = jumpImagesUrls.rising;
+      setPlayerSprite(jumpImagesUrls.rising);
     }
   },
 
@@ -78,10 +99,7 @@ export const playerData = {
     }
 
     playerUI.classList.add('duck');
-    playerImage.src = new URL(
-      '../assets/player/student_duck.png',
-      import.meta.url,
-    ).href;
+    setPlayerSprite(playerSpriteUrls[1]);
     this.heightInPixels = DUCK_HEIGHT;
   },
 
@@ -90,9 +108,7 @@ export const playerData = {
     this.heightInPixels = PLAYER_HEIGHT;
     this.isDucking = false;
 
-    if (this.walkFrameIndex === 0) {
-      playerImage.src = runImagesUrls[this.walkFrameIndex];
-    }
+    setPlayerSprite(runImagesUrls[this.walkFrameIndex]);
   },
 
   setTimeBetweenFramesInSeconds(timeBetweenFramesInSeconds) {
@@ -118,11 +134,11 @@ export const playerData = {
 
     if (this.jumpState === 'jumping' && this.verticalSpeed <= 0) {
       this.jumpState = 'falling';
-      playerImage.src = jumpImagesUrls.top;
+      setPlayerSprite(jumpImagesUrls.top);
     } else if (this.jumpState === 'jumping') {
-      playerImage.src = jumpImagesUrls.rising;
+      setPlayerSprite(jumpImagesUrls.rising);
     } else {
-      playerImage.src = jumpImagesUrls.falling;
+      setPlayerSprite(jumpImagesUrls.falling);
     }
 
     if (this.verticalPositionInPixels <= 0) {
@@ -139,7 +155,7 @@ export const playerData = {
 
     this.walkFrameElapsedInSeconds = 0;
     this.walkFrameIndex = (this.walkFrameIndex + 1) % runImagesUrls.length;
-    playerImage.src = runImagesUrls[this.walkFrameIndex];
+    setPlayerSprite(runImagesUrls[this.walkFrameIndex]);
   },
 
   reset() {
@@ -153,10 +169,7 @@ export const playerData = {
     this.walkFrameElapsedInSeconds = 0;
 
     playerUI.classList.remove('duck', 'jumping');
-    playerImage.src = new URL(
-      '../assets/player/student_stand.png',
-      import.meta.url,
-    ).href;
+    setPlayerSprite(standImageUrl);
   },
 };
 
