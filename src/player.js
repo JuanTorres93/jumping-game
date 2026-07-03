@@ -1,11 +1,3 @@
-import {
-  velocityIncrementInPxPerSecond,
-  gravityVelocityIncrementInPxPerSecond,
-  uniformlyAcceleratedRectilinearMotionPositionIncrementInPx,
-  GRAVITY,
-  gravityPositionIncrementInPx,
-} from './physics.js';
-
 export const playerUI = document.getElementById('player');
 
 const runImagesUrls = [
@@ -23,7 +15,13 @@ const jumpImagesUrls = {
 const playerImage = playerUI.querySelector('img');
 playerImage.src = '../assets/player/student_stand.png';
 
-const PLAYER_HEIGHT = 80;
+const PLAYER_HEIGHT = 106;
+const DUCK_HEIGHT = 60;
+const AIR_HEIGHT = 66;
+const GRAVITY = 1200;
+const JUMP_VELOCITY = 523;
+const DOUBLE_JUMP_VELOCITY = 350;
+const FAST_FALL_VELOCITY = -900;
 
 export const playerData = {
   heightInPixels: PLAYER_HEIGHT,
@@ -32,12 +30,9 @@ export const playerData = {
 
   verticalPositionInPixels: 0,
 
-  JUMP_ACCELERATION: 14,
-  MAX_JUMP_HEIGHT: 300,
-  MAX_SPEED: 1200,
-  distanceDuringJumpInPixels: 0,
-  jumpBlocked: false,
-  jumpState: 'grounded', // "grounded", "jumping", "falling
+  jumpState: 'grounded', // "grounded", "jumping", "falling"
+  jumpCount: 0, // 0 = grounded, 1 = single jump used, 2 = double jump used
+
   walkFrameIndex: 0,
   walkFrameElapsedInSeconds: 0,
   WALK_FRAME_DURATION_IN_SECONDS: 0.12,
@@ -46,42 +41,36 @@ export const playerData = {
 
   timeBetweenFramesInSeconds: 0.016,
 
-  applyGravity() {
-    if (this.jumpState === 'grounded') return;
-
-    const velocityIncrement = gravityVelocityIncrementInPxPerSecond(
-      this.timeBetweenFramesInSeconds,
-      this.verticalSpeed,
-    );
-
-    this.updateVelocityByStep(velocityIncrement);
-  },
-
   jump() {
-    if (this.jumpBlocked || (!this.canJump() && !this.isJumping())) return;
+    if (this.isDucking) return;
 
-    this.jumpState = 'jumping';
-    playerImage.src = jumpImagesUrls.rising;
-
-    const velocityIncrement = velocityIncrementInPxPerSecond(
-      this.timeBetweenFramesInSeconds,
-      this.verticalSpeed,
-      this.JUMP_ACCELERATION,
-    );
-
-    this.updateVelocityByStep(velocityIncrement);
+    if (this.jumpCount === 0) {
+      this.jumpState = 'jumping';
+      this.verticalSpeed = JUMP_VELOCITY;
+      this.jumpCount = 1;
+      playerImage.src = jumpImagesUrls.rising;
+    } else if (this.jumpCount === 1) {
+      this.verticalSpeed = DOUBLE_JUMP_VELOCITY;
+      this.jumpCount = 2;
+      playerImage.src = jumpImagesUrls.rising;
+    }
   },
 
   duck() {
-    if (this.jumpState !== 'grounded') return;
-
-    playerImage.src = '../assets/player/student_duck.png';
-    this.heightInPixels = PLAYER_HEIGHT / 1.5;
-
     this.isDucking = true;
+
+    if (this.jumpState !== 'grounded') {
+      this.verticalSpeed = Math.min(this.verticalSpeed, FAST_FALL_VELOCITY);
+      return;
+    }
+
+    playerUI.classList.add('duck');
+    playerImage.src = '../assets/player/student_duck.png';
+    this.heightInPixels = DUCK_HEIGHT;
   },
 
   standUp() {
+    playerUI.classList.remove('duck');
     this.heightInPixels = PLAYER_HEIGHT;
     this.isDucking = false;
 
@@ -90,83 +79,35 @@ export const playerData = {
     }
   },
 
-  canJump() {
-    return this.jumpState === 'grounded';
-  },
-
-  blockJump() {
-    this.jumpBlocked = true;
-
-    if (this.verticalSpeed > 0) {
-      this.verticalSpeed = 0;
-    }
-  },
-
-  isJumping() {
-    return this.jumpState === 'jumping';
-  },
-
-  hasReachedMaxJumpHeight() {
-    return this.distanceDuringJumpInPixels >= this.MAX_JUMP_HEIGHT;
-  },
-
   setTimeBetweenFramesInSeconds(timeBetweenFramesInSeconds) {
     this.timeBetweenFramesInSeconds = timeBetweenFramesInSeconds;
   },
 
-  updateVelocityByStep(step) {
-    const newSpeed = this.verticalSpeed + step;
-
-    if (newSpeed > this.MAX_SPEED) {
-      this.verticalSpeed = this.MAX_SPEED;
-    } else if (newSpeed < -this.MAX_SPEED) {
-      this.verticalSpeed = -this.MAX_SPEED;
-    } else {
-      this.verticalSpeed = newSpeed;
-    }
-  },
-
   updatePosition() {
-    let positionIncrement = 0;
-
-    if (this.jumpState === 'jumping') {
-      playerImage.src = jumpImagesUrls.rising;
-
-      positionIncrement =
-        uniformlyAcceleratedRectilinearMotionPositionIncrementInPx(
-          this.timeBetweenFramesInSeconds,
-          this.verticalSpeed,
-          this.JUMP_ACCELERATION - GRAVITY,
-        );
-
-      const jumpOnlyIncrement =
-        uniformlyAcceleratedRectilinearMotionPositionIncrementInPx(
-          this.timeBetweenFramesInSeconds,
-          this.verticalSpeed,
-          this.JUMP_ACCELERATION,
-        );
-      this.distanceDuringJumpInPixels += jumpOnlyIncrement;
-
-      if (this.hasReachedMaxJumpHeight()) {
-        this.jumpState = 'falling';
-        this.verticalSpeed = 0;
-        playerImage.src = jumpImagesUrls.top;
-      }
-    } else if (this.jumpState === 'falling') {
-      playerImage.src = jumpImagesUrls.falling;
-
-      positionIncrement = gravityPositionIncrementInPx(
-        this.timeBetweenFramesInSeconds,
-        this.verticalSpeed,
-      );
-    } else {
+    if (this.jumpState === 'grounded') {
+      playerUI.classList.remove('jumping');
       if (!this.isDucking) {
         this.walkAnimation();
       }
       return;
     }
 
-    this.verticalPositionInPixels += positionIncrement;
+    playerUI.classList.add('jumping');
+    this.heightInPixels = AIR_HEIGHT;
+
+    const dt = this.timeBetweenFramesInSeconds;
+
+    this.verticalPositionInPixels += this.verticalSpeed * dt;
+    this.verticalSpeed -= GRAVITY * dt;
+
+    if (this.jumpState === 'jumping' && this.verticalSpeed <= 0) {
+      this.jumpState = 'falling';
+      playerImage.src = jumpImagesUrls.top;
+    } else if (this.jumpState === 'jumping') {
+      playerImage.src = jumpImagesUrls.rising;
+    } else {
+      playerImage.src = jumpImagesUrls.falling;
+    }
 
     if (this.verticalPositionInPixels <= 0) {
       this.reset();
@@ -188,20 +129,26 @@ export const playerData = {
   reset() {
     this.verticalPositionInPixels = 0;
     this.verticalSpeed = 0;
-    this.distanceDuringJumpInPixels = 0;
     this.jumpState = 'grounded';
-    this.jumpBlocked = false;
+    this.jumpCount = 0;
     this.heightInPixels = PLAYER_HEIGHT;
     this.isDucking = false;
     this.walkFrameIndex = 0;
     this.walkFrameElapsedInSeconds = 0;
 
+    playerUI.classList.remove('duck', 'jumping');
     playerImage.src = '../assets/player/student_stand.png';
   },
 };
 
 export function getPlayerHitbox() {
-  return playerUI.getBoundingClientRect();
+  const playerRect = playerUI.getBoundingClientRect();
+  return {
+    top: playerRect.top,
+    right: playerRect.right * 0.8,
+    bottom: playerRect.bottom,
+    left: playerRect.left * 1.2,
+  }
 }
 
 export const playerInput = {
