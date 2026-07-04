@@ -4,19 +4,19 @@ import {
   endGame,
   lifeIcons,
   INVULNERABLE_DURATION,
-} from "./engine.js";
-import { getPlayerHitbox, playerData } from "./player.js";
+} from './engine.js';
 import {
   getObstacleHitbox,
   getHeartHitbox,
   removeGameObject,
-} from "./obstacle.js";
-import { playHeartSound, playHitSound } from "./audio.js";
+} from './obstacle.js';
+import { playHeartSound, playHitSound } from './audio.js';
+import { getPlayerHitbox } from './playerLogic.js';
 
 /* ---------- Constants ---------- */
 
 const MAX_LIVES = 3;
-const BEST_SCORE_KEY = "bestScore";
+const BEST_SCORE_KEY = 'bestScore';
 
 /* ---------- Collision ---------- */
 
@@ -75,10 +75,10 @@ function checkCollision(currentTime) {
 
     state.invulnerableUntil = currentTime + INVULNERABLE_DURATION;
 
-    player.classList.add("invulnerable");
+    player.classList.add('invulnerable');
 
     setTimeout(() => {
-      player.classList.remove("invulnerable");
+      player.classList.remove('invulnerable');
     }, INVULNERABLE_DURATION);
 
     return;
@@ -115,15 +115,15 @@ function updateLivesDisplay(state) {
   }
 
   lifeIcons.forEach((icon, index) => {
-    icon.classList.toggle("lost", index >= state.lives);
+    icon.classList.toggle('lost', index >= state.lives);
   });
 }
 
 function showMessage(title, lines, buttonText) {
-  const messageElement = document.getElementById("message");
-  const titleElement = document.getElementById("messageTitle");
-  const bodyElement = document.getElementById("messageBody");
-  const buttonElement = document.getElementById("startBtn");
+  const messageElement = document.getElementById('message');
+  const titleElement = document.getElementById('messageTitle');
+  const bodyElement = document.getElementById('messageBody');
+  const buttonElement = document.getElementById('startBtn');
 
   if (!messageElement || !titleElement || !bodyElement || !buttonElement) {
     return;
@@ -134,28 +134,28 @@ function showMessage(title, lines, buttonText) {
   bodyElement.replaceChildren();
 
   for (const line of lines) {
-    const paragraph = document.createElement("p");
+    const paragraph = document.createElement('p');
     paragraph.textContent = line;
     bodyElement.appendChild(paragraph);
   }
 
   buttonElement.textContent = buttonText;
 
-  messageElement.classList.remove("hidden");
+  messageElement.classList.remove('hidden');
 }
 
 function hideMessage() {
-  const messageElement = document.getElementById("message");
+  const messageElement = document.getElementById('message');
 
   if (!messageElement) {
     return;
   }
 
-  messageElement.classList.add("hidden");
+  messageElement.classList.add('hidden');
 }
 
 function requestRestart() {
-  return confirm("Do you want to restart the game?");
+  return confirm('Do you want to restart the game?');
 }
 
 /* ---------- Best score ---------- */
