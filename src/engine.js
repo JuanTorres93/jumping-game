@@ -1,28 +1,28 @@
-import { playerData } from "./player.js";
-import { gameLoop } from "./gameLoop.js";
-import { updateLivesDisplay } from "./collision-ui.js";
+import { reset } from './playerLogic.js';
+import { gameLoop } from './gameLoop.js';
+import { updateLivesDisplay } from './collision-ui.js';
 import {
   startBackgroundMusic,
   stopBackgroundMusic,
   playGameOverSound,
   setMusicVolume,
   setSfxVolume,
-} from "./audio.js";
+} from './audio.js';
 
-export const game = document.getElementById("game");
-export const player = document.getElementById("player");
-export const playerImg = document.getElementById("playerImg");
-export const obstaclesContainer = document.getElementById("obstacles");
-export const heartsContainer = document.getElementById("hearts");
-export const lifeIcons = Array.from(document.querySelectorAll("#lives .heart"));
-export const scoreElement = document.getElementById("score");
-export const bestScoreElement = document.getElementById("bestScore");
-export const message = document.getElementById("message");
-export const messageTitle = document.getElementById("messageTitle");
-export const messageBody = document.getElementById("messageBody");
-export const startBtn = document.getElementById("startBtn");
-export const musicSlider = document.getElementById("musicSlider");
-export const sfxSlider = document.getElementById("sfxSlider");
+export const game = document.getElementById('game');
+export const player = document.getElementById('player');
+export const playerImg = document.getElementById('playerImg');
+export const obstaclesContainer = document.getElementById('obstacles');
+export const heartsContainer = document.getElementById('hearts');
+export const lifeIcons = Array.from(document.querySelectorAll('#lives .heart'));
+export const scoreElement = document.getElementById('score');
+export const bestScoreElement = document.getElementById('bestScore');
+export const message = document.getElementById('message');
+export const messageTitle = document.getElementById('messageTitle');
+export const messageBody = document.getElementById('messageBody');
+export const startBtn = document.getElementById('startBtn');
+export const musicSlider = document.getElementById('musicSlider');
+export const sfxSlider = document.getElementById('sfxSlider');
 
 export const MAX_LIVES = 3;
 export const HEART_BOTTOM = 290;
@@ -53,18 +53,18 @@ export function randomBetween(min, max) {
 
 export function showMessage(title, lines, buttonLabel) {
   messageTitle.textContent = title;
-  messageBody.innerHTML = "";
+  messageBody.innerHTML = '';
   lines.forEach((line) => {
-    const p = document.createElement("p");
+    const p = document.createElement('p');
     p.textContent = line;
     messageBody.appendChild(p);
   });
   startBtn.textContent = buttonLabel;
-  message.classList.remove("hidden");
+  message.classList.remove('hidden');
 }
 
 export function hideMessage() {
-  message.classList.add("hidden");
+  message.classList.add('hidden');
 }
 
 export function resetGame() {
@@ -82,14 +82,14 @@ export function resetGame() {
   state.nextObstacleAt = performance.now() + 900;
   state.nextHeartAt = performance.now() + randomBetween(9000, 14000);
 
-  playerData.reset();
+  reset();
   updateLivesDisplay(state);
 
   scoreElement.textContent = state.score;
-  obstaclesContainer.innerHTML = "";
-  heartsContainer.innerHTML = "";
-  player.classList.remove("duck", "invulnerable");
-  player.style.bottom = "0px";
+  obstaclesContainer.innerHTML = '';
+  heartsContainer.innerHTML = '';
+  player.classList.remove('duck', 'invulnerable');
+  player.style.bottom = '0px';
   hideMessage();
 
   if (state.animationId) cancelAnimationFrame(state.animationId);
@@ -112,20 +112,20 @@ export function endGame() {
   }
 
   showMessage(
-    "Game Over",
+    'Game Over',
     [
-      "You got caught in the hallway!",
+      'You got caught in the hallway!',
       `Final score: ${state.score}`,
-      "Press R, Enter, or the button to try again.",
+      'Press R, Enter, or the button to try again.',
     ],
-    "Restart Game",
+    'Restart Game',
   );
 }
 
-  musicSlider.oninput = () => {
-    setMusicVolume(musicSlider.value / 100);
-  }
+musicSlider.oninput = () => {
+  setMusicVolume(musicSlider.value / 100);
+};
 
-  sfxSlider.oninput = () => {
-    setSfxVolume(sfxSlider.value / 100);
-  }
+sfxSlider.oninput = () => {
+  setSfxVolume(sfxSlider.value / 100);
+};

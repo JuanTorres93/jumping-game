@@ -1,12 +1,12 @@
 import { resetGame, startBtn } from './engine.js';
-import { playerInput, playerUI, playerData } from './player.js';
+import { heightInPixels, jump, playerInput, playerUI } from './playerLogic.js';
 
 document.addEventListener('keydown', (event) => {
   if (event.key === playerInput.jump.key) {
     playerInput.jump.isPressed = true;
 
     if (!event.repeat) {
-      playerData.jump();
+      jump();
     }
   }
 
@@ -29,7 +29,7 @@ document.addEventListener('keyup', (event) => {
   }
 });
 
-playerUI.style.height = `${playerData.heightInPixels}px`;
-playerUI.style.width = `${playerData.heightInPixels}px`;
+playerUI.style.height = `${heightInPixels}px`;
+playerUI.style.width = `${heightInPixels}px`;
 
 startBtn.addEventListener('click', resetGame);
